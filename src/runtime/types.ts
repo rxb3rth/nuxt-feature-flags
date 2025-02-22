@@ -7,17 +7,16 @@ export interface Flag<T = boolean> {
 }
 
 export interface EvaluationContext {
+  flags?: Record<string, FlagDefinition>
   [key: string]: unknown
 }
 
-export type FlagDefinition =
-  | boolean
-  | ((context: EvaluationContext) => boolean)
+export type FlagDefinition = boolean | EvaluationContext
 
 export interface FeatureFlagsConfig {
   envKey?: string
-  contextPath?: string
   flags?: Record<string, boolean>
+  context?: string | EvaluationContext
   defaultContext?: Record<string, unknown>
 }
 

@@ -1,7 +1,8 @@
 import { defineNuxtPlugin } from 'nuxt/app'
 import { defu } from 'defu'
 import { useFeatureFlags } from './composables'
-import { evaluateFlags, getContext } from './core'
+import { getFlags } from './core'
+import { getContext } from './utils'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const { $config } = nuxtApp
@@ -15,6 +16,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   )
 
   const flagDefinitions = $config.public.featureFlags.flags || {}
-  const evaluatedFlags = evaluateFlags(flagDefinitions, mergedContext)
+  const evaluatedFlags = getFlags(flagDefinitions, mergedContext)
   flags.value = evaluatedFlags
 })

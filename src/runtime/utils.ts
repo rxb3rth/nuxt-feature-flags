@@ -1,27 +1,9 @@
-import type { FlagDefinition, EvaluationContext, Flag } from './types'
+import type { H3Event, H3EventContext } from 'h3'
+import { useRuntimeConfig } from 'nuxt/app'
+import { defu } from 'defu'
 
-export function evaluateFlag(
-  definition: FlagDefinition,
-  context: EvaluationContext,
-): Flag {
-  let value = false
-  const explanation: Flag['explanation'] = {
-    reason: 'DEFAULT',
-  }
-
-  if (typeof definition === 'boolean') {
-    value = definition
-    explanation.reason = 'STATIC'
-  }
-  else if (typeof definition === 'function') {
-    try {
-      value = definition(context)
-      explanation.reason = 'TARGETING_MATCH'
-    }
-    catch {
-      value = false
-    }
-  }
-
-  return { value, explanation }
+export async function getContext(event?: H3Event): Promise<H3EventContext> {
+  const runtimeConfig = useRuntimeConfig()
+  const defaultContext = runtimeConfig.public.featureFlags.defaultContext || {}
+  return defu(event?.context, defaultContext)
 }
