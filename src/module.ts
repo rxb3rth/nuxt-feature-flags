@@ -15,6 +15,8 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     const resolver = createResolver(import.meta.url)
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       nuxt.options.runtimeConfig.public.featureFlags, options)
 
     nuxt.options.nitro = nuxt.options.nitro || {}

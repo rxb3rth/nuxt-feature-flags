@@ -6,14 +6,8 @@ export interface Flag<T = boolean> {
   }
 }
 
-export type FlagDefinition = Record<string, boolean>
+export type FlagDefinition = { [key: string]: boolean | number | string | null }
 
 export type FeatureFlagsConfig = {
   flags?: FlagDefinition
-}
-
-declare module '@nuxt/schema' {
-  interface PublicRuntimeConfig {
-    featureFlags: FeatureFlagsConfig
-  }
 }
