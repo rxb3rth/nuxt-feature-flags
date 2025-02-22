@@ -19,8 +19,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     nuxt.options.runtimeConfig.public.featureFlags = defu(
       nuxt.options.runtimeConfig.public.featureFlags,
       {
@@ -29,7 +27,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         flags: options.flags,
         contextPath: options.contextPath,
       },
-    )
+    ) as FeatureFlagsConfig
 
     addImports({
       name: 'useFeatureFlags',
