@@ -33,8 +33,12 @@ npx nuxi module add nuxt-feature-flags
 export default defineNuxtConfig({
   modules: ['nuxt-feature-flags'],
   featureFlags: {
-    newDashboard: false,
-    experimentalFeature: true
+    flags: {
+      newDashboard: false,
+      experimentalFeature: true
+    },
+    config: '~/flags.config', // Optional: Load flags from a config file
+    inherit: true // Optional: Inherit flags from config file
   }
 })
 ```
@@ -61,19 +65,43 @@ const { isEnabled, get } = useClientFlags()
 ### Module Options
 
 ```ts
-interface ModuleOptions {
-  [key: string]: boolean
+interface FeatureFlagsConfig {
+  config?: string        // Path to feature flags configuration file
+  flags?: FlagDefinition // Feature flags object
+  inherit?: boolean      // Inherit flags from config file
 }
+
+type FlagDefinition = Record<string, boolean>
 ```
 
 ### Example Configuration
 
+1. Using inline flags:
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   featureFlags: {
-    promoBanner: true,
-    betaFeature: false
+    flags: {
+      promoBanner: true,
+      betaFeature: false
+    }
+  }
+})
+```
+
+2. Using configuration file:
+```ts
+// flags.config.ts
+export const flags = {
+  newDashboard: true,
+  isAdmin: false
+}
+
+// nuxt.config.ts
+export default defineNuxtConfig({
+  featureFlags: {
+    config: '~/flags.config',
+    inherit: true // Inherit and merge with inline flags
   }
 })
 ```
@@ -99,6 +127,32 @@ const {
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useServerFlags(event)
 ```
+
+### Server Routes Example
+
+```ts
+// server/api/dashboard.ts
+export default defineEventHandler((event) => {
+  const { isEnabled } = useServerFlags(event)
+
+  // Check if feature flag is enabled
+  if (!isEnabled('newDashboard')) {
+    throw createError({
+      statusCode: 404,
+      message: 'Dashboard not available'
+    })
+  }
+
+  return {
+    stats: {
+      users: 100,
+      revenue: 50000
+    }
+  }
+})
+```
+
+In this example, the server route checks if the `newDashboard` feature flag is enabled before returning the dashboard data. If the feature is not enabled, it returns a 404 error.
 
 ### Flag Type
 
