@@ -6,19 +6,9 @@ export interface Flag<T = boolean> {
   }
 }
 
-export interface EvaluationContext {
-  flags?: Record<string, FlagDefinition>
-  [key: string]: unknown
-}
+export type FlagDefinition = Record<string, boolean>
 
-export type FlagDefinition = boolean | EvaluationContext
-
-export interface FeatureFlagsConfig {
-  envKey?: string
-  flags?: Record<string, boolean>
-  context?: string | EvaluationContext
-  defaultContext?: Record<string, unknown>
-}
+export type FeatureFlagsConfig = FlagDefinition
 
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {

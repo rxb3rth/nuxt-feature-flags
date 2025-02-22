@@ -11,23 +11,12 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     },
     configKey: 'featureFlags',
   },
-  defaults: {
-    envKey: 'NUXT_PUBLIC_FEATURE_FLAGS',
-    flags: {},
-    context: '~/feature-flags.context',
-  },
+  defaults: {},
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
-      nuxt.options.runtimeConfig.public.featureFlags,
-      {
-        envKey: options.envKey,
-        flags: options.flags,
-        context: options.context,
-        defaultContext: options.defaultContext,
-      },
-    ) as FeatureFlagsConfig
+      nuxt.options.runtimeConfig.public.featureFlags, options as FeatureFlagsConfig)
 
     addPlugin({
       src: resolver.resolve('./runtime/plugin'),
