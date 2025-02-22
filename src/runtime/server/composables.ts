@@ -1,16 +1,16 @@
 import type { H3Event } from 'h3'
-import type { Flag } from '../types'
+import type { Flag, FlagDefinition } from '../types'
 
-export function useServerFlags(event: H3Event) {
+export function useServerFlags<T extends FlagDefinition = FlagDefinition>(event: H3Event) {
   const flags = event.context.flags || {}
 
   return {
     flags,
-    isEnabled(flagName: string): boolean {
+    isEnabled(flagName: keyof T): boolean {
       return flags[flagName]?.value ?? false
     },
-    get<T = boolean>(flagName: string): Flag<T> | undefined {
-      return flags[flagName] as Flag<T> | undefined
+    get<V = boolean>(flagName: keyof T): Flag<V> | undefined {
+      return flags[flagName] as Flag<V> | undefined
     },
   }
 }

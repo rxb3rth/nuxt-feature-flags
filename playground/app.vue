@@ -1,16 +1,19 @@
-<script setup>
-const { isEnabled, get, flags } = useClientFlags()
+<script setup lang="ts">
+import type { FlagDefinition } from '../dist/runtime/types'
+
+interface FlagsSchema extends FlagDefinition {
+  newDashboard: boolean
+  experimentalFeature: boolean
+}
+
+const { isEnabled, get, flags } = useClientFlags<FlagsSchema>()
 </script>
 
 <template>
   <div>
-    <pre>
-      {{ isEnabled('experimentalFeature') }}
-      {{ get('newDashboard') }}
-    </pre>
     <ExperimentalFeature v-if="isEnabled('experimentalFeature')" />
     <div v-if="get('newDashboard')?.explanation">
-      Reason: {{ get('newDashboard')?.explanation?.reason }}
+      Reason: {{ get('')?.explanation?.reason }}
     </div>
     <pre>
       {{ flags }}
