@@ -9,9 +9,7 @@ export interface Flag<T = boolean> {
 export type FlagDefinition = Record<string, boolean>
 
 export type FeatureFlagsConfig = {
-  config?: string
   flags?: FlagDefinition
-  inherit?: boolean
 }
 
 declare module '@nuxt/schema' {
