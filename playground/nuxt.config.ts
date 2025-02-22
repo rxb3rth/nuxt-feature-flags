@@ -4,11 +4,23 @@ export default defineNuxtConfig({
   components: true,
   devtools: { enabled: true },
 
+  experimental: {
+    renderJsonPayloads: true,
+  },
+
   compatibilityDate: '2025-02-21',
 
   featureFlags: {
-    newDashboard: true,
-    experimentalFeature: true,
-    generalAvailability: true,
+    config: '~/flags.config',
+    flags: {
+      experimentalFeature: true,
+    },
+    // context: {
+    //   user: {
+    //     isAdmin: true,
+    //   },
+    // },
+    context: '~/flags.context',
+    inherit: true,
   },
 })
