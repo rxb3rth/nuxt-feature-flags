@@ -60,7 +60,7 @@ export default defineNuxtConfig({
 
 ```vue
 <script setup>
-const { isEnabled, get } = useFeatureFlags()
+const { isEnabled, get } = useClientFlags()
 </script>
 
 <template>
@@ -103,7 +103,7 @@ const {
   flags,       // Reactive flags object
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
-} = useFeatureFlags()
+} = useClientFlags()
 ```
 
 ## Contribution

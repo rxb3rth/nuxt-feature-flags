@@ -1,7 +1,7 @@
 import { useState } from 'nuxt/app'
 import type { Flag } from './types'
 
-export function useFeatureFlags() {
+export function useClientFlags() {
   const flags = useState<Record<string, Flag>>('feature-flags', () => ({}))
 
   return {
