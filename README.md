@@ -58,15 +58,40 @@ const { isEnabled, get } = useClientFlags()
 </template>
 ```
 
+4. Use in Server Routes:
+
+```ts
+// server/api/dashboard.ts
+export default defineEventHandler((event) => {
+  const { isEnabled } = useServerFlags(event)
+
+  // Check if feature flag is enabled
+  if (!isEnabled('newDashboard')) {
+    throw createError({
+      statusCode: 404,
+      message: 'Dashboard not available'
+    })
+  }
+
+  return {
+    stats: {
+      users: 100,
+      revenue: 50000
+    }
+  }
+})
+```
+
+In this example, the server route checks if the `newDashboard` feature flag is enabled before returning the dashboard data. If the feature is not enabled, it returns a 404 error.
+
+
 ## Configuration
 
 ### Module Options
 
 ```ts
 interface FeatureFlagsConfig {
-  config?: string        // Path to feature flags configuration file
   flags?: FlagDefinition // Feature flags object
-  inherit?: boolean      // Inherit flags from config file
 }
 
 type FlagDefinition = Record<string, boolean>
@@ -107,32 +132,6 @@ const {
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useServerFlags(event)
 ```
-
-### Server Routes Example
-
-```ts
-// server/api/dashboard.ts
-export default defineEventHandler((event) => {
-  const { isEnabled } = useServerFlags(event)
-
-  // Check if feature flag is enabled
-  if (!isEnabled('newDashboard')) {
-    throw createError({
-      statusCode: 404,
-      message: 'Dashboard not available'
-    })
-  }
-
-  return {
-    stats: {
-      users: 100,
-      revenue: 50000
-    }
-  }
-})
-```
-
-In this example, the server route checks if the `newDashboard` feature flag is enabled before returning the dashboard data. If the feature is not enabled, it returns a 404 error.
 
 ### Flag Type
 
