@@ -1,10 +1,7 @@
-import { resolveAlias } from '@nuxt/kit'
-
 export async function resolveFeatureFlagFile(filename: string) {
   if (filename) {
     try {
-      const url = resolveAlias(filename)
-      const config = await import(url)
+      const config = await import(filename)
       const definitionsFromFile = config.default || config
       return definitionsFromFile?.flags || {}
     }
