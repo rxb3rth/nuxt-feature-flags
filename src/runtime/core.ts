@@ -1,44 +1,33 @@
-import type { H3Event } from 'h3'
-import { useRuntimeConfig } from 'nuxt/app'
-import { defu } from 'defu'
-import type { FlagDefinition, EvaluationContext, Flag } from './types'
-import { evaluateFlag } from './utils'
+import defu from 'defu'
+import type { H3EventContext } from 'h3'
+import type { FlagDefinition, Flag } from './types'
 
-export function evaluateFlags(
+export function getFlags(
   definitions: Record<string, FlagDefinition>,
-  context: EvaluationContext,
+  serverContext?: H3EventContext,
 ): Record<string, Flag> {
   const result: Record<string, Flag> = {}
+  const flags = defu(definitions, serverContext?.featureFlagsConfig?.flags || {})
 
-  for (const [key, definition] of Object.entries(definitions)) {
-    result[key] = evaluateFlag(definition, context)
+  for (const [key, definition] of Object.entries(flags)) {
+    result[key] = evaluateFlag(definition)
   }
 
   return result
 }
 
-export async function getContext(event?: H3Event): Promise<EvaluationContext> {
-  const runtimeConfig = useRuntimeConfig()
-
-  const contextPath = runtimeConfig.public.featureFlags.contextPath
-  const defaultContext = runtimeConfig.public.featureFlags.defaultContext || {}
-
-  if (!contextPath) return defaultContext
-
-  try {
-    const contextModule = await import(contextPath).catch(() => ({}))
-    const contextFn = contextModule.default || contextModule.context
-
-    if (typeof contextFn !== 'function') {
-      console.warn('Feature Flags: No valid context function found at', contextPath)
-      return defaultContext
-    }
-
-    const context = await contextFn(event)
-    return defu(context, defaultContext)
+export function evaluateFlag(
+  definition: FlagDefinition,
+): Flag {
+  let value = false
+  const explanation: Flag['explanation'] = {
+    reason: 'DEFAULT',
   }
-  catch (error) {
-    console.error('Feature Flags context error:', error)
-    return defaultContext
+
+  if (typeof definition === 'boolean') {
+    value = definition
+    explanation.reason = 'STATIC'
   }
+
+  return { value, explanation }
 }

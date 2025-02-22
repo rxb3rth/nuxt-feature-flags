@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addImports, addPlugin } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin } from '@nuxt/kit'
 import { defu } from 'defu'
 import type { FeatureFlagsConfig } from './runtime/types'
 
@@ -14,7 +14,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   defaults: {
     envKey: 'NUXT_PUBLIC_FEATURE_FLAGS',
     flags: {},
-    contextPath: '~/feature-flags.context',
+    context: '~/feature-flags.context',
   },
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
@@ -23,19 +23,21 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       nuxt.options.runtimeConfig.public.featureFlags,
       {
         envKey: options.envKey,
-        defaultContext: options.defaultContext,
         flags: options.flags,
-        contextPath: options.contextPath,
+        context: options.context,
+        defaultContext: options.defaultContext,
       },
     ) as FeatureFlagsConfig
+
+    addPlugin({
+      src: resolver.resolve('./runtime/plugin'),
+    })
+
+    addServerPlugin(resolver.resolve('./runtime/server/plugin'))
 
     addImports({
       name: 'useFeatureFlags',
       from: resolver.resolve('./runtime/composables'),
-    })
-
-    addPlugin({
-      src: resolver.resolve('./runtime/plugin'),
     })
   },
 })
