@@ -4,7 +4,7 @@ import { defu } from 'defu'
 import { resolveFlags } from '../core'
 import { getFlags, getContext } from './utils'
 
-export default defineNitroPlugin(async (nitroApp: NitroApp) => {
+export default defineNitroPlugin((nitroApp: NitroApp) => {
   nitroApp.hooks.hook('request', async (event) => {
     const flagDefinitions = getFlags() || {}
     const evaluatedFlags = resolveFlags(flagDefinitions)
