@@ -1,15 +1,8 @@
 import { defineNuxtModule, createResolver, addImports, addPlugin } from '@nuxt/kit'
 import { defu } from 'defu'
-import type { FlagDefinition } from './runtime/types'
+import type { FeatureFlagsConfig } from './runtime/types'
 
-export interface ModuleOptions {
-  flags?: Record<string, FlagDefinition>
-  defaultContext?: Record<string, unknown>
-  envKey?: string
-  contextPath?: string
-}
-
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
     name: 'nuxt-feature-flags',
     compatibility: {
@@ -26,6 +19,8 @@ export default defineNuxtModule<ModuleOptions>({
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     nuxt.options.runtimeConfig.public.featureFlags = defu(
       nuxt.options.runtimeConfig.public.featureFlags,
       {

@@ -13,3 +13,16 @@ export interface EvaluationContext {
 export type FlagDefinition =
   | boolean
   | ((context: EvaluationContext) => boolean)
+
+export interface FeatureFlagsConfig {
+  envKey?: string
+  contextPath?: string
+  flags?: Record<string, boolean>
+  defaultContext?: Record<string, unknown>
+}
+
+declare module '@nuxt/schema' {
+  interface PublicRuntimeConfig {
+    featureFlags: FeatureFlagsConfig
+  }
+}
