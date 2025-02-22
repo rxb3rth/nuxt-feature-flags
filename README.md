@@ -8,7 +8,7 @@
 A feature flag module for Nuxt 3 with context-aware evaluation and server-side support, inspired by @happykit/flags.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-- [📖 &nbsp;Documentation](#usage)
+- [📖 &nbsp;Documentation](https://nuxt-feature-flags-docs.vercel.app)
 
 ## Features
 
