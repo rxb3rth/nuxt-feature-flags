@@ -7,7 +7,7 @@ export function useServerFlags(event: H3Event) {
   return {
     flags,
     isEnabled(flagName: string): boolean {
-      return flags[flagName] ?? false
+      return flags[flagName]?.value ?? false
     },
     get<T = boolean>(flagName: string): Flag<T> | undefined {
       return flags[flagName] as Flag<T> | undefined
