@@ -52,7 +52,7 @@ export default defineNuxtConfig({
   featureFlags: {
     contextPath: '~/feature-flags.context',
     flags: {
-      experimentalFeature: (context) => context.user?.isBetaTester
+      experimentalFeature: false
     },
     defaultContext: {
       environment: process.env.NODE_ENV
