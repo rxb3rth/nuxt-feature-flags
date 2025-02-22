@@ -1,8 +1,15 @@
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin } from '@nuxt/kit'
-import type { FeatureFlagsConfig } from './runtime/types'
+import type { FlagDefinition } from './runtime/types'
+import { logger } from './runtime/logger'
+import { loadConfigFile } from './runtime/core/config-loader'
 
-export default defineNuxtModule<FeatureFlagsConfig>({
+export interface ModuleOptions {
+  flags?: FlagDefinition
+  configFile?: string
+}
+
+export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-feature-flags',
     compatibility: {
@@ -13,6 +20,18 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    if (options.configFile) {
+      try {
+        logger.info('Loading feature flags from:', options.configFile)
+        const configFlags = await loadConfigFile(options.configFile, nuxt.options.rootDir)
+        logger.info('Loaded feature flags:', configFlags)
+        options.flags = defu(options.flags, configFlags || {})
+      }
+      catch (error) {
+        logger.error('Failed to load feature flags configuration:', error)
+      }
+    }
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
       nuxt.options.runtimeConfig.public.featureFlags, options)
