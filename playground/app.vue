@@ -1,5 +1,5 @@
 <script setup>
-const { isEnabled, get } = useFeatureFlags()
+const { isEnabled, get, flags } = useFeatureFlags()
 </script>
 
 <template>
@@ -12,5 +12,8 @@ const { isEnabled, get } = useFeatureFlags()
     <div v-if="get('newDashboard')?.explanation">
       Reason: {{ get('newDashboard')?.explanation?.reason }}
     </div>
+    <pre>
+      {{ flags }}
+    </pre>
   </div>
 </template>
