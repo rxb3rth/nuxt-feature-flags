@@ -37,8 +37,6 @@ export default defineNuxtConfig({
       newDashboard: false,
       experimentalFeature: true
     },
-    config: '~/flags.config', // Optional: Load flags from a config file
-    inherit: true // Optional: Inherit flags from config file
   }
 })
 ```
@@ -76,7 +74,6 @@ type FlagDefinition = Record<string, boolean>
 
 ### Example Configuration
 
-1. Using inline flags:
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
@@ -85,23 +82,6 @@ export default defineNuxtConfig({
       promoBanner: true,
       betaFeature: false
     }
-  }
-})
-```
-
-2. Using configuration file:
-```ts
-// flags.config.ts
-export const flags = {
-  newDashboard: true,
-  isAdmin: false
-}
-
-// nuxt.config.ts
-export default defineNuxtConfig({
-  featureFlags: {
-    config: '~/flags.config',
-    inherit: true // Inherit and merge with inline flags
   }
 })
 ```

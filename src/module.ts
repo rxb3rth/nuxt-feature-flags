@@ -1,7 +1,6 @@
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, resolveAlias } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
-import { resolveFeatureFlagFile } from './runtime/utils'
 
 export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
@@ -11,9 +10,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       bridge: false,
     },
     configKey: 'featureFlags',
-  },
-  defaults: {
-    inherit: false,
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
@@ -38,32 +34,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     addImports({
       name: 'useClientFlags',
       from: resolver.resolve('./runtime/composables'),
-    })
-
-    const resolveConfig = async () => {
-      const { config, flags, inherit } = nuxt.options.runtimeConfig.public.featureFlags
-      if ((config && typeof config === 'string')) {
-        nuxt.options.alias[config] = resolveAlias(config)
-
-        const definitions = await resolveFeatureFlagFile(nuxt.options.alias[config])
-
-        const hasFileDefinitionSchema = definitions && Object.keys(definitions).length > 0
-        const hasConfigDefinitionSchema = flags && Object.keys(flags).length > 0
-
-        if (hasFileDefinitionSchema && hasConfigDefinitionSchema && inherit) {
-          nuxt.options.runtimeConfig.public.featureFlags.flags = defu(flags, definitions)
-        }
-        else if (hasFileDefinitionSchema) {
-          nuxt.options.runtimeConfig.public.featureFlags.flags = definitions
-        }
-        else {
-          nuxt.options.runtimeConfig.public.featureFlags.flags = flags
-        }
-      }
-    }
-
-    nuxt.hook('modules:done', async () => {
-      await resolveConfig()
     })
   },
 })
