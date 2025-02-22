@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "mnuxt-feature-flags-playground",
+  "name": "nuxt-feature-flags-playground",
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",

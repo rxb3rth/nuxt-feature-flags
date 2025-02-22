@@ -2,7 +2,7 @@ import type { H3Event } from 'h3'
 import type { Flag } from '../types'
 
 export function useServerFlags(event: H3Event) {
-  const { flags = {} } = event.context
+  const flags = event.context.flags || {}
 
   return {
     flags,

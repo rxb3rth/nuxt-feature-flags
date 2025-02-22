@@ -6,7 +6,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { $config } = nuxtApp
   const { flags } = useClientFlags()
 
-  const flagDefinitions = $config.public.featureFlags || {}
-  const evaluatedFlags = resolveFlags(flagDefinitions)
+  const definitions = $config.public.featureFlags?.flags || {}
+  const evaluatedFlags = await resolveFlags(definitions)
   flags.value = evaluatedFlags
 })
