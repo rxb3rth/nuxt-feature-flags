@@ -1,7 +1,7 @@
 export default defineEventHandler((event) => {
   const { isEnabled, get, flags } = useServerFlags(event)
   console.log('New request: ' + getRequestURL(event))
-  console.log('newDashboard', isEnabled('newDashboard'))
-  console.log('isAdmin', get('newDashboard'))
+  console.log('newDashboard.isEnabled', isEnabled('newDashboard'))
+  console.log('newDashboard.get', get('newDashboard'))
   console.log('flags', flags)
 })
