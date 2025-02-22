@@ -1,15 +1,11 @@
-import type { H3Event } from 'h3'
+import type { H3Event, H3EventContext } from 'h3'
 import { useRuntimeConfig } from 'nitropack/runtime'
-import { defu } from 'defu'
-import type { EvaluationContext } from '../types'
 
-export function resolveFlagsConfig(event?: H3Event) {
+export function getFlags() {
   const runtimeConfig = useRuntimeConfig()
-  return event?.context?.featureFlagsConfig || runtimeConfig.public.featureFlags || {}
+  return runtimeConfig.public?.featureFlags || {}
 }
 
-export async function getContext(event?: H3Event): Promise<EvaluationContext> {
-  const runtimeConfig = useRuntimeConfig()
-  const defaultContext = runtimeConfig.public.featureFlags.defaultContext || {}
-  return defu(event?.context?.featureFlags, defaultContext)
+export async function getContext(event?: H3Event): Promise<H3EventContext> {
+  return event?.context
 }

@@ -50,13 +50,8 @@ export default function featureFlagsContext(event: any) {
 export default defineNuxtConfig({
   modules: ['nuxt-feature-flags'],
   featureFlags: {
-    contextPath: '~/feature-flags.context',
-    flags: {
-      experimentalFeature: false
-    },
-    defaultContext: {
-      environment: process.env.NODE_ENV
-    }
+    newDashboard: false,
+    experimentalFeature: true
   }
 })
 ```
@@ -84,10 +79,7 @@ const { isEnabled, get } = useFeatureFlags()
 
 ```ts
 interface ModuleOptions {
-  flags?: Record<string, FlagDefinition>
-  defaultContext?: Record<string, any>
-  envKey?: string
-  contextPath?: string
+  Record<string, FlagDefinition>
 }
 ```
 
@@ -97,35 +89,12 @@ interface ModuleOptions {
 // nuxt.config.ts
 export default defineNuxtConfig({
   featureFlags: {
-    contextPath: '~/feature-flags.context',
-    flags: {
-      promoBanner: true,
-      userSurvey: { percentage: 50 },
-      betaFeature: (ctx) => ctx.user?.tier === 'premium'
-    },
-    defaultContext: {
-      environment: process.env.NODE_ENV
-    },
-    envKey: 'NUXT_PUBLIC_FEATURE_FLAGS'
+    promoBanner: true,
   }
 })
 ```
 
 ## Documentation
-
-### Context File
-
-Create a file at the specified `contextPath` (default: `~/feature-flags.context.ts`) that exports a function:
-
-```ts
-export default function featureFlagsContext(event: any) {
-  return {
-    // Your context properties
-  }
-}
-```
-
-The function receives the Nitro event and should return an object with the evaluation context.
 
 ### Composables
 
@@ -135,14 +104,6 @@ const {
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useFeatureFlags()
-```
-
-### Flag Definitions
-
-```ts
-type FlagDefinition =
-  | boolean
-  | ((context: EvaluationContext) => boolean)
 ```
 
 ## Contribution
