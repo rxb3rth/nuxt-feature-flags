@@ -1,5 +1,5 @@
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, resolveAlias } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { resolveFeatureFlagFile } from './runtime/utils'
 
@@ -43,7 +43,9 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     const resolveConfig = async () => {
       const { config, flags, inherit } = nuxt.options.runtimeConfig.public.featureFlags
       if ((config && typeof config === 'string')) {
-        const definitions = await resolveFeatureFlagFile(config)
+        nuxt.options.alias[config] = resolveAlias(config)
+
+        const definitions = await resolveFeatureFlagFile(nuxt.options.alias[config])
 
         const hasFileDefinitionSchema = definitions && Object.keys(definitions).length > 0
         const hasConfigDefinitionSchema = flags && Object.keys(flags).length > 0
