@@ -8,7 +8,11 @@ export interface Flag<T = boolean> {
 
 export type FlagDefinition = Record<string, boolean>
 
-export type FeatureFlagsConfig = FlagDefinition
+export type FeatureFlagsConfig = {
+  config?: string
+  flags?: FlagDefinition
+  inherit?: boolean
+}
 
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
