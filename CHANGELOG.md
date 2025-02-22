@@ -47,7 +47,6 @@
 
 ### ❤️ Contributors
 
-- Roberth González <roberth.gonzalez@manifiesto.biz>
 - Daniel Roe ([@danielroe](http://github.com/danielroe))
 - Roberth González <reliutg@gmail.com>
 
