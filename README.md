@@ -5,19 +5,19 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-A feature flag module for Nuxt 3 with context-aware evaluation and server-side support, inspired by @happykit/flags.
+A feature flag module for Nuxt 3 with static and dynamic flag evaluation, server-side support, and type safety.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 - [📖 &nbsp;Documentation](https://nuxt-feature-flags-docs.vercel.app)
 
 ## Features
 
-- 🎯 &nbsp;Context-aware evaluation (user, environment, cookies)
 - ⚡ &nbsp;Server-side evaluation
 - 🛠 &nbsp;TypeScript ready
 - 🔍 &nbsp;Explanation system for flag states
 - 🧩 &nbsp;Nuxt 3 composables integration
 - 🔧 &nbsp;Runtime configuration support
+- 🎯 &nbsp;Static and dynamic flag evaluation
 
 ## Quick Setup
 
@@ -27,24 +27,7 @@ A feature flag module for Nuxt 3 with context-aware evaluation and server-side s
 npx nuxi module add nuxt-feature-flags
 ```
 
-2. Create a context file:
-
-```ts
-// ~/feature-flags.context.ts
-import { parseCookies } from 'h3'
-import { detectDevice } from '~/utils/device'
-
-export default function featureFlagsContext(event: any) {
-  return {
-    user: event?.context.user,
-    cookies: parseCookies(event),
-    device: detectDevice(event),
-    environment: process.env.NODE_ENV
-  }
-}
-```
-
-3. Configure in `nuxt.config.ts`:
+2. Configure in `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
@@ -56,7 +39,7 @@ export default defineNuxtConfig({
 })
 ```
 
-4. Use in components:
+3. Use in components:
 
 ```vue
 <script setup>
@@ -79,7 +62,7 @@ const { isEnabled, get } = useClientFlags()
 
 ```ts
 interface ModuleOptions {
-  Record<string, FlagDefinition>
+  [key: string]: boolean
 }
 ```
 
@@ -90,13 +73,14 @@ interface ModuleOptions {
 export default defineNuxtConfig({
   featureFlags: {
     promoBanner: true,
+    betaFeature: false
   }
 })
 ```
 
 ## Documentation
 
-### Composables
+### Client Composables
 
 ```ts
 const { 
@@ -104,6 +88,28 @@ const {
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useClientFlags()
+```
+
+### Server Composables
+
+```ts
+const { 
+  flags,       // Flags object
+  isEnabled,   // (flagName: string) => boolean
+  get          // <T>(flagName: string) => Flag<T> | undefined
+} = useServerFlags(event)
+```
+
+### Flag Type
+
+```ts
+interface Flag<T = boolean> {
+  value: T
+  explanation?: {
+    reason: 'STATIC' | 'TARGETING_MATCH' | 'DEFAULT'
+    rule?: string
+  }
+}
 ```
 
 ## Contribution
