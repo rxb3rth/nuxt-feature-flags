@@ -1,0 +1,48 @@
+{
+  "name": "nuxt-feature-flags",
+  "version": "0.0.1",
+  "description": "Feature flags for Nuxt",
+  "keywords": [
+    "nuxt",
+    "feature",
+    "flags"
+  ],
+  "repository": "rxb3rth/nuxt-feature-flags",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "release": "npm run lint && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.15.4"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "^2.1.0",
+    "@nuxt/eslint-config": "^1.1.0",
+    "@nuxt/module-builder": "^0.8.4",
+    "@nuxt/schema": "^3.15.4",
+    "@types/node": "latest",
+    "changelogen": "^0.5.7",
+    "eslint": "^9.20.1",
+    "nuxt": "^3.15.4",
+    "typescript": "~5.7.3",
+    "vue-tsc": "^2.2.2"
+  }
+}
