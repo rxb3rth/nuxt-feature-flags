@@ -13,7 +13,7 @@ const { isEnabled, get, flags } = useClientFlags<FlagsSchema>()
   <div>
     <ExperimentalFeature v-if="isEnabled('experimentalFeature')" />
     <div v-if="get('newDashboard')?.explanation">
-      Reason: {{ get('')?.explanation?.reason }}
+      Reason: {{ get('newDashboard')?.explanation?.reason }}
     </div>
     <pre>
       {{ flags }}
