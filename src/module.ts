@@ -18,6 +18,14 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     nuxt.options.runtimeConfig.public.featureFlags = defu(
       nuxt.options.runtimeConfig.public.featureFlags, options as FeatureFlagsConfig)
 
+    nuxt.options.nitro = nuxt.options.nitro || {}
+    nuxt.options.nitro.imports = nuxt.options.nitro.imports || {}
+    nuxt.options.nitro.imports.presets = nuxt.options.nitro.imports.presets || []
+    nuxt.options.nitro.imports.presets.push({
+      from: resolver.resolve('./runtime/server/composables'),
+      imports: ['useServerFlags'],
+    })
+
     addPlugin({
       src: resolver.resolve('./runtime/plugin'),
     })
@@ -25,7 +33,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     addServerPlugin(resolver.resolve('./runtime/server/plugin'))
 
     addImports({
-      name: 'useFeatureFlags',
+      name: 'useClientFlags',
       from: resolver.resolve('./runtime/composables'),
     })
   },

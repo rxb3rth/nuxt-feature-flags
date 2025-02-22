@@ -1,5 +1,5 @@
 <script setup>
-const { isEnabled, get, flags } = useFeatureFlags()
+const { isEnabled, get, flags } = useClientFlags()
 </script>
 
 <template>
