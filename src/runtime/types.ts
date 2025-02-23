@@ -17,4 +17,4 @@ export type FeatureFlagsConfig<T extends FlagDefinition = FlagDefinition> = {
   config?: string
 }
 
-export declare function defineFeatureFlagsConfig(callback: (context: H3EventContext) => FlagDefinition): (context: H3EventContext) => FlagDefinition
+// export declare function defineFeatureFlagsConfig(callback: (context: H3EventContext) => FlagDefinition): (context: H3EventContext) => FlagDefinition
