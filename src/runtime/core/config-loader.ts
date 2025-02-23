@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url'
 import type { Nuxt } from 'nuxt/schema'
 import { resolve } from 'pathe'
 import type { FeatureFlagsConfig } from '../types'
-import { logger } from '../logger'
+import { consolador } from '../logger'
 
 /**
  * Load and merge a custom configuration file for your module.
@@ -51,7 +51,7 @@ export async function loadModuleConfig(
     customConfig = importedModule.default || importedModule
   }
   catch (error) {
-    logger.error(`Error loading config file at ${configFilePath}:`, error)
+    consolador.error(`Error loading config file at ${configFilePath}:`, error)
   }
 
   return customConfig?.flags || customConfig || {}
