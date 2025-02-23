@@ -1,5 +1,3 @@
-import { resolve } from 'pathe'
-
 export default defineNuxtConfig({
   modules: ['../src/module'],
 
@@ -9,6 +7,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-02-21',
 
   featureFlags: {
-    configFile: resolve(__dirname, 'feature-flags.config.ts'),
+    config: './feature-flags.config.js',
   },
 })

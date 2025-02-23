@@ -1,5 +1,3 @@
-// import type { FlagDefinition } from '../src/runtime/types'
-
 const featureFlags = {
   newDashboard: true,
   experimentalFeature: true,
