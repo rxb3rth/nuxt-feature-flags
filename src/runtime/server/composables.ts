@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
 import type { Flag, FlagDefinition } from '../types'
 
-export function useServerFlags<T extends FlagDefinition = FlagDefinition>(event: H3Event) {
+export function useServerFlags<T extends FlagDefinition>(event: H3Event) {
   const flags = event.context.flags || {}
 
   return {
