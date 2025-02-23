@@ -1,8 +1,7 @@
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin } from '@nuxt/kit'
-import type { FlagDefinition } from './runtime/types'
-import { logger } from './runtime/logger'
-import { loadConfigFile } from './runtime/core/config-loader'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, addTypeTemplate } from '@nuxt/kit'
+import type { FeatureFlagsConfig } from './runtime/types'
+import { loadModuleConfig } from './runtime/utils'
 
 export interface ModuleOptions {
   flags?: FlagDefinition
@@ -35,6 +34,11 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
       nuxt.options.runtimeConfig.public.featureFlags, options)
+
+    const c = await loadModuleConfig(options, nuxt)
+    console.log('Loaded config:', c)
+
+    // TODO: Create template for the nitro plugin
 
     nuxt.options.nitro = nuxt.options.nitro || {}
     nuxt.options.nitro.imports = nuxt.options.nitro.imports || {}
