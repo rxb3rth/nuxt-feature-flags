@@ -5,29 +5,36 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-A feature flag module for Nuxt 3 with static and dynamic flag evaluation, server-side support, and type safety.
+A powerful, type-safe feature flag module for Nuxt 3 that enables both static and dynamic feature flag evaluation with server-side support. Perfect for A/B testing, gradual rollouts, and feature management.
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-- [📖 &nbsp;Documentation](https://nuxt-feature-flags-docs.vercel.app)
+## ✨ Features
 
-## Features
+- ⚡ **Server-Side Support**: Evaluate flags on the server for consistent behavior, better performance, and SEO optimization
+- 🛠 **TypeScript Ready**: Full TypeScript support with type-safe flag definitions and autocomplete
+- 🔍 **Explanation System**: Understand why flags are enabled/disabled with detailed explanations
+- 🧩 **Nuxt 3 Integration**: Seamless integration with auto-imports and runtime config
+- 🎯 **Static & Dynamic Flags**: Support for both simple boolean flags and dynamic evaluation
+- 🔒 **Type Safety**: Catch errors early with full type inference and validation
 
-- ⚡ &nbsp;Server-side evaluation
-- 🛠 &nbsp;TypeScript ready
-- 🔍 &nbsp;Explanation system for flag states
-- 🧩 &nbsp;Nuxt 3 composables integration
-- 🔧 &nbsp;Runtime configuration support
-- 🎯 &nbsp;Static and dynamic flag evaluation
-
-## Quick Setup
-
-1. Add the module to your Nuxt project:
+## 📦 Installation
 
 ```bash
+# Using npx
 npx nuxi module add nuxt-feature-flags
+
+# Using npm
+npm install nuxt-feature-flags
+
+# Using yarn
+yarn add nuxt-feature-flags
+
+# Using pnpm
+pnpm add nuxt-feature-flags
 ```
 
-2. Configure in `nuxt.config.ts`:
+## 🚀 Quick Setup
+
+1. Add the module to your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
@@ -36,12 +43,12 @@ export default defineNuxtConfig({
     flags: {
       newDashboard: false,
       experimentalFeature: true
-    },
+    }
   }
 })
 ```
 
-3. Use in components:
+2. Use in your Vue components:
 
 ```vue
 <script setup>
@@ -52,20 +59,19 @@ const { isEnabled, get } = useClientFlags()
   <div>
     <NewDashboard v-if="isEnabled('newDashboard')" />
     <div v-if="get('experimentalFeature')?.explanation">
-      Flag reason: {{ get('experimentalFeature')?.explanation?.reason }}
+      Flag enabled because: {{ get('experimentalFeature').explanation.reason }}
     </div>
   </div>
 </template>
 ```
 
-4. Use in Server Routes:
+3. Use in your server routes:
 
 ```ts
 // server/api/dashboard.ts
 export default defineEventHandler((event) => {
   const { isEnabled } = useServerFlags(event)
 
-  // Check if feature flag is enabled
   if (!isEnabled('newDashboard')) {
     throw createError({
       statusCode: 404,
@@ -82,38 +88,11 @@ export default defineEventHandler((event) => {
 })
 ```
 
-In this example, the server route checks if the `newDashboard` feature flag is enabled before returning the dashboard data. If the feature is not enabled, it returns a 404 error.
+## 📖 Documentation
 
+Visit our [documentation site](https://nuxt-feature-flags-docs.vercel.app) for detailed guides and API reference.
 
-## Configuration
-
-### Module Options
-
-```ts
-interface FeatureFlagsConfig {
-  flags?: FlagDefinition // Feature flags object
-}
-
-type FlagDefinition = Record<string, boolean>
-```
-
-### Example Configuration
-
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-  featureFlags: {
-    flags: {
-      promoBanner: true,
-      betaFeature: false
-    }
-  }
-})
-```
-
-## Documentation
-
-### Client Composables
+### Client-Side Usage
 
 ```ts
 const { 
@@ -121,9 +100,18 @@ const {
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useClientFlags()
+
+// Check if a flag is enabled
+if (isEnabled('newFeature')) {
+  // Feature is enabled
+}
+
+// Get flag with explanation
+const flag = get('experimentalFeature')
+console.log(flag.explanation)
 ```
 
-### Server Composables
+### Server-Side Usage
 
 ```ts
 const { 
@@ -131,9 +119,18 @@ const {
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
 } = useServerFlags(event)
+
+// Check if a flag is enabled
+if (isEnabled('newFeature')) {
+  // Feature is enabled
+}
+
+// Get flag with explanation
+const flag = get('experimentalFeature')
+console.log(flag.explanation)
 ```
 
-### Flag Type
+### Flag Types
 
 ```ts
 interface Flag<T = boolean> {
@@ -145,24 +142,38 @@ interface Flag<T = boolean> {
 }
 ```
 
-## Contribution
+## ⚙️ Configuration
 
-Contributions are welcome! Please follow these steps for local development:
+```ts
+interface FeatureFlagsConfig {
+  flags?: FlagDefinition // Feature flags object
+}
 
-```bash
-# Install dependencies
-npm install
+type FlagDefinition = Record<string, boolean>
 
-# Develop with playground
-npm run dev
-
-# Lint code
-npm run lint
+// Example configuration
+export default defineNuxtConfig({
+  featureFlags: {
+    flags: {
+      promoBanner: true,
+      betaFeature: false,
+      newDashboard: false
+    }
+  }
+})
 ```
 
-## License
+## 🤝 Contributing
 
-MIT License © 2025 Roberth González
+1. Clone this repository
+2. Install dependencies using `npm install`
+3. Start development server using `npm run dev`
+4. Make your changes
+5. Submit a pull request
+
+## 📄 License
+
+[MIT License](./LICENSE) © 2025 Roberth González
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-feature-flags/latest.svg?style=flat&colorA=020420&colorB=00DC82
