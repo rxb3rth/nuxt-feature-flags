@@ -7,6 +7,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-02-21',
 
   featureFlags: {
-    config: './feature-flags.config.js',
+    config: './feature-flags.config.ts',
   },
 })
