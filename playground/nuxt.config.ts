@@ -7,9 +7,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-02-21',
 
   featureFlags: {
-    flags: {
-      newDashboard: true,
-      experimentalFeature: true,
-    },
+    config: './feature-flags.config.js',
   },
 })

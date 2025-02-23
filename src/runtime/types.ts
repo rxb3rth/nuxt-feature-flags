@@ -6,8 +6,11 @@ export interface Flag<T = boolean> {
   }
 }
 
-export type FlagDefinition = { [key: string]: boolean | number | string | null }
+export type FlagValue = boolean | number | string | null
+
+export type FlagDefinition = { [key: string]: FlagValue }
 
 export type FeatureFlagsConfig = {
   flags?: FlagDefinition
+  config?: string
 }
