@@ -1,6 +1,34 @@
 # Changelog
 
 
+## v0.2.2
+
+[compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.1...v0.2.2)
+
+### 🚀 Enhancements
+
+- Replace feature-flags.config.js with dynamic feature-flags.config.ts for improved context handling ([1c184a1](https://github.com/rxb3rth/nuxt-feature-flags/commit/1c184a1))
+- Update nuxt.config.ts to use TypeScript feature flags configuration ([70558fc](https://github.com/rxb3rth/nuxt-feature-flags/commit/70558fc))
+- Add user role context to dashboard API handler and update flags retrieval to async ([ca5386b](https://github.com/rxb3rth/nuxt-feature-flags/commit/ca5386b))
+- Update feature flags configuration handling and improve runtime imports ([1c3fbfd](https://github.com/rxb3rth/nuxt-feature-flags/commit/1c3fbfd))
+- Refactor server flags handling to support dynamic configuration loading and remove obsolete plugin ([1f5dc45](https://github.com/rxb3rth/nuxt-feature-flags/commit/1f5dc45))
+- Enhance feature flags configuration with generic type support and add defineFeatureFlagsConfig function ([afd6bfd](https://github.com/rxb3rth/nuxt-feature-flags/commit/afd6bfd))
+- Add 'jiti' to the build configuration dependencies ([a17f9d2](https://github.com/rxb3rth/nuxt-feature-flags/commit/a17f9d2))
+
+### 🩹 Fixes
+
+- Suppress TypeScript linting errors for temporary comments in module setup ([d4a4fbc](https://github.com/rxb3rth/nuxt-feature-flags/commit/d4a4fbc))
+- Suppress TypeScript linting errors by adding eslint-disable comments and remove unused imports ([e355d15](https://github.com/rxb3rth/nuxt-feature-flags/commit/e355d15))
+- Remove unused imports and commented-out code in types.ts ([088ccba](https://github.com/rxb3rth/nuxt-feature-flags/commit/088ccba))
+
+### 📖 Documentation
+
+- Update README with context-aware evaluation and configuration examples for feature flags ([c0c21c2](https://github.com/rxb3rth/nuxt-feature-flags/commit/c0c21c2))
+
+### ❤️ Contributors
+
+- Roberth González <reliutg@gmail.com>
+
 ## v0.2.1
 
 [compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.0...v0.2.1)
