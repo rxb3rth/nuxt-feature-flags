@@ -1,6 +1,5 @@
-import { pathToFileURL } from 'node:url'
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, addTypeTemplate } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
 import { loadConfigFile } from './runtime/core/config-loader'
@@ -25,8 +24,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         options.flags = defu(options.flags, configFlags || {})
 
         // For runtime usage
-        const configUrl = pathToFileURL(configFile!).href
-        nuxt.options.runtimeConfig.public.configUrl = configUrl
+        nuxt.options.runtimeConfig._feature_flags_config_path = configFile
       }
       catch (error) {
         consolador.error('Failed to load feature flags configuration:', error)
@@ -34,8 +32,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     }
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       nuxt.options.runtimeConfig.public.featureFlags, options)
 
     nuxt.options.nitro = nuxt.options.nitro || {}
@@ -45,13 +41,19 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       from: resolver.resolve('./runtime/server/composables'),
       imports: ['useServerFlags'],
     })
-
-    addServerPlugin(resolver.resolve('./runtime/server/plugin'))
+    nuxt.options.nitro.imports.presets.push({
+      from: resolver.resolve('./runtime/core/config-schema'),
+      imports: ['defineFeatureFlagsConfig'],
+    })
 
     addPlugin({
       src: resolver.resolve('./runtime/plugin'),
     })
 
+    addImports({
+      name: 'defineFeatureFlagsConfig',
+      from: resolver.resolve('./runtime/core/config-schema'),
+    })
     addImports({
       name: 'useClientFlags',
       from: resolver.resolve('./runtime/composables'),

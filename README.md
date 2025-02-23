@@ -9,7 +9,7 @@ A powerful, type-safe feature flag module for Nuxt 3 that enables both static an
 
 ## ✨ Features
 
-- ⚡ **Server-Side Support**: Evaluate flags on the server for consistent behavior, better performance, and SEO optimization
+- 🎯 **Context-aware evaluation**: Evaluate flags based on request context (user roles, geo-location, device type, etc.)
 - 🛠 **TypeScript Ready**: Full TypeScript support with type-safe flag definitions and autocomplete
 - 🔍 **Explanation System**: Understand why flags are enabled/disabled with detailed explanations
 - 🧩 **Nuxt 3 Integration**: Seamless integration with auto-imports and runtime config
@@ -36,6 +36,7 @@ pnpm add nuxt-feature-flags
 
 1. Add the module to your `nuxt.config.ts`:
 
+Basic usage providing plain configuration.
 ```ts
 export default defineNuxtConfig({
   modules: ['nuxt-feature-flags'],
@@ -46,6 +47,33 @@ export default defineNuxtConfig({
     }
   }
 })
+```
+
+Basic usage providing configuration file.
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-feature-flags'],
+  featureFlags: {
+    config: './feature-flags.config.ts',
+  }
+})
+```
+
+Advance usage providing context based flag rules (Only for api route requests).
+```ts
+// feature-flags.config.ts
+import type { H3EventContext } from 'h3'
+
+// Context available only on server, context will be undefined at the client side
+export default function featureFlagsConfig(context?: H3EventContext) {
+  return {
+    isAdmin: context?.user?.role === 'admin',
+    newDashboard: true,
+    experimentalFeature: process.env.NODE_ENV === 'development',
+    promoBanner: false,
+    betaFeature: false,
+  }
+}
 ```
 
 2. Use in your Vue components:
@@ -70,7 +98,7 @@ const { isEnabled, get } = useClientFlags()
 ```ts
 // server/api/dashboard.ts
 export default defineEventHandler((event) => {
-  const { isEnabled } = useServerFlags(event)
+  const { isEnabled } = await useServerFlags(event)
 
   if (!isEnabled('newDashboard')) {
     throw createError({
@@ -118,7 +146,7 @@ const {
   flags,       // Flags object
   isEnabled,   // (flagName: string) => boolean
   get          // <T>(flagName: string) => Flag<T> | undefined
-} = useServerFlags(event)
+} = await useServerFlags(event)
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
@@ -164,7 +192,7 @@ export default defineNuxtConfig({
 })
 
 // Example of configuration file
-// feature-flags.config.js
+// feature-flags.config.ts
 export default {
   isAdmin: false,
   newDashboard: true,
@@ -177,7 +205,7 @@ export default {
 export default defineNuxtConfig({
   featureFlags: {
     flags: {
-      config: './feature-flags.config.js',
+      config: './feature-flags.config.ts',
     }
   }
 })
