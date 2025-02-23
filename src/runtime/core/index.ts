@@ -1,4 +1,10 @@
+import type { RuntimeConfig } from '@nuxt/schema'
+import type { H3EventContext } from 'h3'
 import type { FlagDefinition, Flag, FlagValue } from '../types'
+
+export function getFlags(context?: H3EventContext, runtimeConfig: RuntimeConfig) {
+  return context?.public?.featureFlags?.flags || runtimeConfig.public?.featureFlags?.flags || {}
+}
 
 export async function resolveFlags(definitions: FlagDefinition,
 ) {
