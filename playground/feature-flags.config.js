@@ -1,8 +1,7 @@
-const featureFlags = {
+export default {
+  isAdmin: false,
   newDashboard: true,
   experimentalFeature: true,
   promoBanner: false,
   betaFeature: false,
 }
-
-export default featureFlags
