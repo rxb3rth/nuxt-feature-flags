@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
@@ -14,6 +15,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     configKey: 'featureFlags',
   },
   async setup(options, nuxt) {
+    // @ts-ignore
     const resolver = createResolver(import.meta.url)
 
     if (options.config) {
@@ -32,6 +34,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     }
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
+      // @ts-ignore
       nuxt.options.runtimeConfig.public.featureFlags, options)
 
     nuxt.options.nitro = nuxt.options.nitro || {}
