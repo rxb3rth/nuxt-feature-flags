@@ -1,7 +1,7 @@
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
-import { logger } from './runtime/logger'
+import { consolador } from './runtime/logger'
 import { loadModuleConfig } from './runtime/core/config-loader'
 
 export default defineNuxtModule<FeatureFlagsConfig>({
@@ -18,13 +18,13 @@ export default defineNuxtModule<FeatureFlagsConfig>({
 
     if (options.config) {
       try {
-        logger.info('Loading feature flags from:', options.config)
+        consolador.info('Loading feature flags from:', options.config)
         const configFlags = await loadModuleConfig(options, nuxt)
-        logger.info('Loaded feature flags:', configFlags)
+        consolador.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
       }
       catch (error) {
-        logger.error('Failed to load feature flags configuration:', error)
+        consolador.error('Failed to load feature flags configuration:', error)
       }
     }
 
