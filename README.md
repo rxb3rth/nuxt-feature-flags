@@ -147,17 +147,37 @@ interface Flag<T = boolean> {
 ```ts
 interface FeatureFlagsConfig {
   flags?: FlagDefinition // Feature flags object
+  config?: string // Path to configuration file
 }
 
 type FlagDefinition = Record<string, boolean>
 
-// Example configuration
+// Example of inline configuration
 export default defineNuxtConfig({
   featureFlags: {
     flags: {
       promoBanner: true,
       betaFeature: false,
       newDashboard: false
+    }
+  }
+})
+
+// Example of configuration file
+// feature-flags.config.js
+export default {
+  isAdmin: false,
+  newDashboard: true,
+  experimentalFeature: true,
+  promoBanner: false,
+  betaFeature: false,
+}
+
+// nuxt.config
+export default defineNuxtConfig({
+  featureFlags: {
+    flags: {
+      config: './feature-flags.config.js',
     }
   }
 })
