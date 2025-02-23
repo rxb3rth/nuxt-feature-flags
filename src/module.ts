@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
@@ -15,6 +14,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     configKey: 'featureFlags',
   },
   async setup(options, nuxt) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const resolver = createResolver(import.meta.url)
 
@@ -34,6 +34,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     }
 
     nuxt.options.runtimeConfig.public.featureFlags = defu(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       nuxt.options.runtimeConfig.public.featureFlags, options)
 
@@ -44,19 +45,11 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       from: resolver.resolve('./runtime/server/composables'),
       imports: ['useServerFlags'],
     })
-    nuxt.options.nitro.imports.presets.push({
-      from: resolver.resolve('./runtime/core/config-schema'),
-      imports: ['defineFeatureFlagsConfig'],
-    })
 
     addPlugin({
       src: resolver.resolve('./runtime/plugin'),
     })
 
-    addImports({
-      name: 'defineFeatureFlagsConfig',
-      from: resolver.resolve('./runtime/core/config-schema'),
-    })
     addImports({
       name: 'useClientFlags',
       from: resolver.resolve('./runtime/composables'),
