@@ -10,6 +10,7 @@ export type FlagDefinition = Record<string, boolean>
 
 export type FeatureFlagsConfig = {
   flags?: FlagDefinition
+  config?: string
 }
 
 declare module '@nuxt/schema' {
