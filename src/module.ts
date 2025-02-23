@@ -1,14 +1,10 @@
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
-import { loadModuleConfig } from './runtime/utils'
+import { logger } from './runtime/logger'
+import { loadModuleConfig } from './runtime/core/config-loader'
 
-export interface ModuleOptions {
-  flags?: FlagDefinition
-  configFile?: string
-}
-
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
     name: 'nuxt-feature-flags',
     compatibility: {
@@ -20,10 +16,10 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    if (options.configFile) {
+    if (options.config) {
       try {
-        logger.info('Loading feature flags from:', options.configFile)
-        const configFlags = await loadConfigFile(options.configFile, nuxt.options.rootDir)
+        logger.info('Loading feature flags from:', options.config)
+        const configFlags = await loadModuleConfig(options, nuxt)
         logger.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
       }
@@ -36,9 +32,6 @@ export default defineNuxtModule<ModuleOptions>({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       nuxt.options.runtimeConfig.public.featureFlags, options)
-
-    const c = await loadModuleConfig(options, nuxt)
-    console.log('Loaded config:', c)
 
     // TODO: Create template for the nitro plugin
 

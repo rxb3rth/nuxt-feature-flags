@@ -1,4 +1,4 @@
-import type { FlagDefinition, Flag } from '../types'
+import type { FlagDefinition, Flag, FlagValue } from '../types'
 
 export async function resolveFlags(definitions: FlagDefinition,
 ) {
@@ -12,7 +12,7 @@ export async function resolveFlags(definitions: FlagDefinition,
 }
 
 export function evaluateFlag(
-  value: boolean,
+  value: FlagValue,
 ): Flag {
   const explanation: Flag['explanation'] = {
     reason: 'DEFAULT',
