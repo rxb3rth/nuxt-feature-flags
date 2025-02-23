@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import type { FlagDefinition } from '../dist/runtime/types'
-
-interface FlagsSchema extends FlagDefinition {
-  newDashboard: boolean
-  experimentalFeature: boolean
-}
+import type { FlagsSchema } from '#build/types/nuxt-feature-flags'
 
 const { isEnabled, get, flags } = useClientFlags<FlagsSchema>()
 </script>
