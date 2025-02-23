@@ -5,12 +5,13 @@ import { consolador } from '../logger'
 
 export async function loadConfigFile(configPath: string, cwd: string) {
   try {
-    const configFile = configPath.replace(/\.\w+$/, '')
-    const { config } = await loadConfig<FlagDefinition>({ configFile, cwd })
-    return config
+    return loadConfig<FlagDefinition>({ configFile: configPath.replace(/\.\w+$/, ''), cwd })
   }
   catch (error) {
     consolador.error('Failed to load config file:', error)
-    return {}
+    return {
+      config: {},
+      configFile: configPath,
+    }
   }
 }
