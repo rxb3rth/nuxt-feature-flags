@@ -23,11 +23,12 @@
     "dist"
   ],
   "scripts": {
+    "prepare": "nuxi prepare",
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "npm run lint && npm run prepare && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -44,7 +45,8 @@
     "changelogen": "^0.5.7",
     "eslint": "^9.20.1",
     "nuxt": "^3.15.4",
-    "typescript": "~5.7.3",
+    "pathe": "^2.0.3",
+    "typescript": "~5.6.3",
     "vue-tsc": "^2.2.2"
   }
 }
