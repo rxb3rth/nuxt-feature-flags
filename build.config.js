@@ -4,5 +4,6 @@ export default {
     'defu',
     'pathe',
     'c12',
+    'jiti',
   ],
 }
