@@ -6,4 +6,6 @@ export default defineEventHandler((event) => {
   console.log('newDashboard.isEnabled', isEnabled('newDashboard'))
   console.log('newDashboard.get', get('newDashboard'))
   console.log('flags', flags)
+
+  return flags
 })
