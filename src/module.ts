@@ -2,7 +2,7 @@ import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addServerPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
-import { loadModuleConfig } from './runtime/core/config-loader'
+import { loadConfigFile } from './runtime/core/config-loader'
 
 export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
@@ -19,7 +19,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     if (options.config) {
       try {
         consolador.info('Loading feature flags from:', options.config)
-        const configFlags = await loadModuleConfig(options, nuxt)
+        const configFlags = await loadConfigFile(options.config, nuxt.options.rootDir)
         consolador.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
       }

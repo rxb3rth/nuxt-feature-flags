@@ -3,5 +3,6 @@ export default {
   externals: [
     'defu',
     'pathe',
+    'c12',
   ],
 }
