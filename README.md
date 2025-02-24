@@ -11,7 +11,6 @@ A powerful, type-safe feature flag module for Nuxt 3 that enables both static an
 
 - 🎯 **Context-aware evaluation**: Evaluate flags based on request context (user roles, geo-location, device type, etc.)
 - 🛠 **TypeScript Ready**: Full TypeScript support with type-safe flag definitions and autocomplete
-- 🔍 **Explanation System**: Understand why flags are enabled/disabled with detailed explanations
 - 🧩 **Nuxt 3 Integration**: Seamless integration with auto-imports and runtime config
 - 🎯 **Static & Dynamic Flags**: Support for both simple boolean flags and dynamic evaluation
 - 🔒 **Type Safety**: Catch errors early with full type inference and validation
