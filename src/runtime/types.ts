@@ -1,14 +1,10 @@
-export interface Flag<T = boolean> {
-  value: T
-  explanation?: {
-    reason: 'STATIC' | 'TARGETING_MATCH' | 'DEFAULT'
-    rule?: string
-  }
-}
+export type Flag<T = boolean> = T
 
 export type FlagValue = boolean | number | string | null
 
-export type FlagDefinition = { [key: string]: FlagValue }
+export type FlagDefinition = Record<string, FlagValue>
+
+export type FlagResolved<T extends FlagDefinition = FlagDefinition> = Record<keyof T, Flag>
 
 export type FeatureFlagsConfig<T extends FlagDefinition = FlagDefinition> = {
   flags?: T

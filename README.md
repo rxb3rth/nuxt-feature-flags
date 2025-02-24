@@ -66,15 +66,12 @@ export default function featureFlagsConfig(context?: H3EventContext) {
 
 ```vue
 <script setup>
-const { isEnabled, get } = useClientFlags()
+const { isEnabled } = useClientFlags()
 </script>
 
 <template>
   <div>
     <NewDashboard v-if="isEnabled('newDashboard')" />
-    <div v-if="get('experimentalFeature')?.explanation">
-      Flag enabled because: {{ get('experimentalFeature').explanation.reason }}
-    </div>
   </div>
 </template>
 ```
@@ -110,17 +107,12 @@ export default defineEventHandler(async (event) => {
 const { 
   flags,       // Reactive flags object
   isEnabled,   // (flagName: string) => boolean
-  get          // <T>(flagName: string) => Flag<T> | undefined
 } = useClientFlags()
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
   // Feature is enabled
 }
-
-// Get flag with explanation
-const flag = get('experimentalFeature')
-console.log(flag.explanation)
 ```
 
 ### Server-Side Usage
@@ -129,28 +121,11 @@ console.log(flag.explanation)
 const { 
   flags,       // Flags object
   isEnabled,   // (flagName: string) => boolean
-  get          // <T>(flagName: string) => Flag<T> | undefined
 } = await useServerFlags(event)
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
   // Feature is enabled
-}
-
-// Get flag with explanation
-const flag = get('experimentalFeature')
-console.log(flag.explanation)
-```
-
-### Flag Types
-
-```ts
-interface Flag<T = boolean> {
-  value: T
-  explanation?: {
-    reason: 'STATIC' | 'TARGETING_MATCH' | 'DEFAULT'
-    rule?: string
-  }
 }
 ```
 
