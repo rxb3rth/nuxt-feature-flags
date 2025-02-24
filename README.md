@@ -36,8 +36,8 @@ pnpm add nuxt-feature-flags
 
 1. Add the module to your `nuxt.config.ts`:
 
-Basic usage providing plain configuration.
 ```ts
+// Basic usage with plain configuration
 export default defineNuxtConfig({
   modules: ['nuxt-feature-flags'],
   featureFlags: {
@@ -47,31 +47,17 @@ export default defineNuxtConfig({
     }
   }
 })
-```
 
-Basic usage providing configuration file.
-```ts
-export default defineNuxtConfig({
-  modules: ['nuxt-feature-flags'],
-  featureFlags: {
-    config: './feature-flags.config.ts',
-  }
-})
-```
-
-Advance usage providing context based flag rules (Only for api route requests).
-```ts
+// Advanced usage with context-based flag rules
 // feature-flags.config.ts
 import type { H3EventContext } from 'h3'
 
-// Context available only on server, context will be undefined at the client side
 export default function featureFlagsConfig(context?: H3EventContext) {
   return {
     isAdmin: context?.user?.role === 'admin',
     newDashboard: true,
     experimentalFeature: process.env.NODE_ENV === 'development',
-    promoBanner: false,
-    betaFeature: false,
+    betaFeature: context?.user?.isBetaTester ?? false,
   }
 }
 ```
@@ -97,7 +83,7 @@ const { isEnabled, get } = useClientFlags()
 
 ```ts
 // server/api/dashboard.ts
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const { isEnabled } = await useServerFlags(event)
 
   if (!isEnabled('newDashboard')) {
@@ -117,8 +103,6 @@ export default defineEventHandler((event) => {
 ```
 
 ## 📖 Documentation
-
-Visit our [documentation site](https://nuxt-feature-flags-docs.vercel.app) for detailed guides and API reference.
 
 ### Client-Side Usage
 
@@ -170,17 +154,11 @@ interface Flag<T = boolean> {
 }
 ```
 
-## ⚙️ Configuration
+## ⚙️ Configuration Methods
+
+### 1. Inline Configuration
 
 ```ts
-interface FeatureFlagsConfig {
-  flags?: FlagDefinition // Feature flags object
-  config?: string // Path to configuration file
-}
-
-type FlagDefinition = Record<string, boolean>
-
-// Example of inline configuration
 export default defineNuxtConfig({
   featureFlags: {
     flags: {
@@ -190,8 +168,18 @@ export default defineNuxtConfig({
     }
   }
 })
+```
 
-// Example of configuration file
+### 2. Configuration File
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  featureFlags: {
+    config: './feature-flags.config.ts',
+  }
+})
+
 // feature-flags.config.ts
 export default {
   isAdmin: false,
@@ -200,15 +188,29 @@ export default {
   promoBanner: false,
   betaFeature: false,
 }
+```
 
-// nuxt.config
-export default defineNuxtConfig({
-  featureFlags: {
-    flags: {
-      config: './feature-flags.config.ts',
-    }
+### 3. Context-Aware Configuration
+
+```ts
+// feature-flags.config.ts
+import type { H3EventContext } from 'h3'
+
+export default function featureFlagsConfig(context?: H3EventContext) {
+  return {
+    // User role-based flag
+    isAdmin: context?.user?.role === 'admin',
+    
+    // Environment-based flag
+    devTools: process.env.NODE_ENV === 'development',
+    
+    // User status-based flag
+    betaFeature: context?.user?.isBetaTester ?? false,
+    
+    // Device-based flag
+    mobileFeature: context?.device?.isMobile ?? false,
   }
-})
+}
 ```
 
 ## 🤝 Contributing
