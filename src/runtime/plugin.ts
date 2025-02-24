@@ -4,8 +4,7 @@ import { getFlags, resolveFlags } from './core'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const { flags } = useClientFlags()
-
-  const definitions = getFlags(nuxtApp.ssrContext?.config, nuxtApp.$config)
+  const definitions = getFlags(nuxtApp.$config, nuxtApp.ssrContext?.config)
   const evaluatedFlags = await resolveFlags(definitions)
   flags.value = evaluatedFlags
 })
