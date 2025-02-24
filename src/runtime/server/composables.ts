@@ -1,7 +1,7 @@
 import type { H3Event, H3EventContext } from 'h3'
 import { createJiti } from 'jiti'
 import { useRuntimeConfig } from 'nitropack/runtime'
-import type { Flag, FlagDefinition } from '../types'
+import type { FlagDefinition, FlagResolved } from '../types'
 
 async function getFlags(context?: H3EventContext) {
   const runtimeConfig = useRuntimeConfig()
@@ -25,15 +25,12 @@ async function getFlags(context?: H3EventContext) {
 }
 
 export async function useServerFlags<T extends FlagDefinition>(event: H3Event) {
-  const flags = await getFlags(event.context)
+  const flags = await getFlags(event.context) as FlagResolved<T>
 
   return {
     flags,
-    isEnabled(flagName: keyof T): boolean {
-      return flags[flagName]?.value ?? false
-    },
-    get<V = boolean>(flagName: keyof T): Flag<V> | undefined {
-      return flags[flagName] as Flag<V> | undefined
+    isEnabled(flagName: keyof FlagResolved<T>): boolean {
+      return !!flags[flagName]
     },
   }
 }

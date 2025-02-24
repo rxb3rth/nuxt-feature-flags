@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { FlagsSchema } from '#build/types/nuxt-feature-flags'
+import type { FlagsSchema } from '#build/module/nuxt-feature-flags'
 
-const { isEnabled, get, flags } = useClientFlags<FlagsSchema>()
+const { isEnabled, flags } = useClientFlags<FlagsSchema>()
+
+console.log(flags.value)
 </script>
 
 <template>
   <div>
     <ExperimentalFeature v-if="isEnabled('experimentalFeature')" />
-    <div v-if="get('newDashboard')?.explanation">
-      Reason: {{ get('newDashboard')?.explanation?.reason }}
-    </div>
     <pre>
       {{ flags }}
     </pre>
