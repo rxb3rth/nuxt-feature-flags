@@ -1,13 +1,13 @@
 import { useState } from 'nuxt/app'
-import type { FlagDefinition, FlagResolved } from './types'
+import type { FlagDefinition } from './types'
 
 export function useClientFlags<T extends FlagDefinition>() {
-  const flags = useState<FlagResolved<T>>('feature-flags')
+  const flags = useState<T>('feature-flags')
 
   return {
     flags,
-    isEnabled(flagName: keyof FlagResolved<T>): boolean {
-      return flags.value[flagName]
+    isEnabled(flagName: keyof T): boolean {
+      return !!flags.value[flagName]
     },
   }
 }
