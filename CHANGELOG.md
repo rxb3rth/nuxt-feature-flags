@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.2.3
+
+[compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.2...v0.2.3)
+
+### 🩹 Fixes
+
+- Allow optional context parameter in getFlags function ([9bb6c35](https://github.com/rxb3rth/nuxt-feature-flags/commit/9bb6c35))
+- Reorder parameters in getFlags function for consistency ([65881a8](https://github.com/rxb3rth/nuxt-feature-flags/commit/65881a8))
+
+### 💅 Refactors
+
+- Simplify flag handling by removing unused get method and explanations ([4e84c05](https://github.com/rxb3rth/nuxt-feature-flags/commit/4e84c05))
+- Update flag handling to improve type safety and simplify isEnabled checks ([2f6d76d](https://github.com/rxb3rth/nuxt-feature-flags/commit/2f6d76d))
+
+### 📖 Documentation
+
+- Update README with improved configuration examples and usage instructions ([b7aafdf](https://github.com/rxb3rth/nuxt-feature-flags/commit/b7aafdf))
+
+### 🏡 Chore
+
+- **release:** V0.2.2 ([efede2e](https://github.com/rxb3rth/nuxt-feature-flags/commit/efede2e))
+
+### ❤️ Contributors
+
+- Roberth González <reliutg@gmail.com>
+
 ## v0.2.2
 
 [compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.1...v0.2.2)
