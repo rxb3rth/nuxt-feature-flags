@@ -15,7 +15,7 @@ async function getFlags(context?: H3EventContext) {
       interopDefault: true,
       moduleCache: true,
     })
-    const configFn = await jiti.import<(context: H3EventContext) => FlagDefinition>(runtimeConfig._feature_flags_config_path, { default: true })
+    const configFn = await jiti.import<(context?: H3EventContext) => FlagDefinition>(runtimeConfig._feature_flags_config_path, { default: true })
     return configFn(context)
   }
   catch (error) {
