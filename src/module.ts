@@ -22,7 +22,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       try {
         consolador.info('Loading feature flags from:', options.config)
         const { config: configFlags, configFile } = await loadConfigFile(options.config, nuxt.options.rootDir)
-
         consolador.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
 
