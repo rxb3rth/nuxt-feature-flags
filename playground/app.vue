@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { FlagsSchema } from '#build/module/nuxt-feature-flags'
-
-const { isEnabled, flags } = useClientFlags<FlagsSchema>()
+const { isEnabled, flags } = useClientFlags()
 
 console.log(flags.value)
 </script>
 
 <template>
   <div>
-    <ExperimentalFeature v-if="isEnabled('experimentalFeature')" />
+    <ExperimentalFeature v-if="isEnabled('isAdmin')" />
     <pre>
       {{ flags }}
     </pre>
