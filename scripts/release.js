@@ -24,6 +24,6 @@ if (!isValidType) {
   process.exit(1)
 }
 
-execSync(`pnpm dlx release ${bumpType}`)
+execSync(`pnpm dlx changelogen ${bumpType}`)
 execSync('npm publish')
 execSync('git push --follow-tags')
