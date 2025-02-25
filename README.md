@@ -208,6 +208,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://x.com/rxb3rth"><img src="https://avatars.githubusercontent.com/u/63687573?v=4?s=100" width="100px;" alt="Eugen Istoc"/><br /><sub><b>Roberth González</b></sub></a><br /><a href="https://github.com/rxb3rth/nuxt-feature-flags/commits?author=rxb3rth" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.eugenistoc.com"><img src="https://avatars.githubusercontent.com/u/928780?v=4?s=100" width="100px;" alt="Eugen Istoc"/><br /><sub><b>Eugen Istoc</b></sub></a><br /><a href="https://github.com/rxb3rth/nuxt-feature-flags/commits?author=genu" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://roe.dev"><img src="https://avatars.githubusercontent.com/u/28706372?v=4?s=100" width="100px;" alt="Daniel Roe"/><br /><sub><b>Daniel Roe</b></sub></a><br /><a href="https://github.com/rxb3rth/nuxt-feature-flags/commits?author=danielroe" title="Documentation">📖</a></td>
     </tr>
