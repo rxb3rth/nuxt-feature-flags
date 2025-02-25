@@ -1,6 +1,48 @@
 # Changelog
 
 
+## v0.3.0
+
+[compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.3...v0.3.0)
+
+### 🚀 Enhancements
+
+- Add file existence check for feature flags configuration ([9b8be41](https://github.com/rxb3rth/nuxt-feature-flags/commit/9b8be41))
+- Add file existence check when loading configuration ([c704852](https://github.com/rxb3rth/nuxt-feature-flags/commit/c704852))
+
+### 🩹 Fixes
+
+- Makes typescript check known properties ([c7ffbda](https://github.com/rxb3rth/nuxt-feature-flags/commit/c7ffbda))
+- Update release command to use pnpm dlx ([f70441c](https://github.com/rxb3rth/nuxt-feature-flags/commit/f70441c))
+- Update release script to use changelogen instead of release ([d2047e3](https://github.com/rxb3rth/nuxt-feature-flags/commit/d2047e3))
+- Update repository field in package.json to include type and URL ([9168855](https://github.com/rxb3rth/nuxt-feature-flags/commit/9168855))
+
+### 💅 Refactors
+
+- Remove unnecessary line from feature flags loading process ([237f16e](https://github.com/rxb3rth/nuxt-feature-flags/commit/237f16e))
+- Enhance FlagsSchema type definition for improved TypeScript key handling ([9b2b253](https://github.com/rxb3rth/nuxt-feature-flags/commit/9b2b253))
+- Update useClientFlags and useServerFlags to utilize FlagsSchema for improved type safety ([ae11450](https://github.com/rxb3rth/nuxt-feature-flags/commit/ae11450))
+- Remove FlagsSchema type usage in useClientFlags and useServerFlags for simplified implementation ([c9b178b](https://github.com/rxb3rth/nuxt-feature-flags/commit/c9b178b))
+
+### 📖 Documentation
+
+- Remove explanation system from README for clarity ([99c95d6](https://github.com/rxb3rth/nuxt-feature-flags/commit/99c95d6))
+- Add contributors section to README for improved community recognition ([34ea253](https://github.com/rxb3rth/nuxt-feature-flags/commit/34ea253))
+- Update README.md [skip ci] ([a7a2c40](https://github.com/rxb3rth/nuxt-feature-flags/commit/a7a2c40))
+- Create .all-contributorsrc [skip ci] ([ac7fd8e](https://github.com/rxb3rth/nuxt-feature-flags/commit/ac7fd8e))
+- Update README.md [skip ci] ([0d2cc0f](https://github.com/rxb3rth/nuxt-feature-flags/commit/0d2cc0f))
+- Update .all-contributorsrc [skip ci] ([e03a55d](https://github.com/rxb3rth/nuxt-feature-flags/commit/e03a55d))
+- Add Roberth González to contributors list ([f6509d3](https://github.com/rxb3rth/nuxt-feature-flags/commit/f6509d3))
+
+### 🏡 Chore
+
+- Update release script to use custom node script for improved flexibility ([e3cb975](https://github.com/rxb3rth/nuxt-feature-flags/commit/e3cb975))
+
+### ❤️ Contributors
+
+- Roberth González <reliutg@gmail.com>
+- Eugen Istoc <eugenistoc@gmail.com>
+
 ## v0.2.3
 
 [compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.2...v0.2.3)

@@ -1,6 +1,6 @@
 {
   "name": "nuxt-feature-flags",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Feature flags for Nuxt",
   "keywords": [
     "nuxt",
