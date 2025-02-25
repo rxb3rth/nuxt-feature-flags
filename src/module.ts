@@ -1,4 +1,3 @@
-import { existsSync } from 'node:fs'
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
@@ -23,10 +22,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       try {
         consolador.info('Loading feature flags from:', options.config)
         const { config: configFlags, configFile } = await loadConfigFile(options.config, nuxt.options.rootDir)
-
-        if (!existsSync(configFile!)) {
-          throw new Error(`${configFile} does not exist`)
-        }
 
         consolador.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
