@@ -1,10 +1,12 @@
 import { defineNuxtPlugin } from 'nuxt/app'
 import { useClientFlags } from './composables'
-import { getFlags, resolveFlags } from './core'
 
-export default defineNuxtPlugin(async (nuxtApp) => {
-  const { flags } = useClientFlags()
-  const definitions = getFlags(nuxtApp.$config, nuxtApp.ssrContext?.config)
-  const evaluatedFlags = await resolveFlags(definitions)
-  flags.value = evaluatedFlags
+export default defineNuxtPlugin({
+  name: 'feature-flags-fetch-plugin',
+  enforce: 'pre',
+  async setup() {
+    if (import.meta.server) {
+      await useClientFlags().fetch()
+    }
+  },
 })
