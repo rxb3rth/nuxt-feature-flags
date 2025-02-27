@@ -6,6 +6,7 @@ console.log(flags.value)
 
 <template>
   <div>
+    <ExperimentalFeature v-if="isEnabled('experimentalFeature')" />
     <pre>
       {{ flags }}
     </pre>
