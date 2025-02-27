@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v0.4.1
+
+[compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.4.0...v0.4.1)
+
 ## v0.3.0
 
 [compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.2.3...v0.3.0)
