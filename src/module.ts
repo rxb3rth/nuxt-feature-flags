@@ -1,5 +1,5 @@
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
 import { loadConfigFile } from './runtime/core/config-loader'
@@ -55,6 +55,11 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       from: resolver.resolve('./runtime/composables'),
     })
 
+    addServerHandler({
+      handler: resolver.resolve('./runtime/server/api/feature-flags.get'),
+      route: '/api/_feature-flags/feature-flags',
+      method: 'get',
+    })
     // Generate types from featureFlags config
     addTypeTemplate({
       filename: 'types/nuxt-feature-flags.d.ts',
