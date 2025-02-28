@@ -1,8 +1,14 @@
 import { defu } from 'defu'
-import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler, addServerImportsDir } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
-import { loadConfigFile } from './runtime/core/config-loader'
+import { loadConfigFile } from './runtime/config-loader'
+
+declare module 'nuxt/schema' {
+  interface PublicRuntimeConfig {
+    featureFlags: FeatureFlagsConfig
+  }
+}
 
 export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
@@ -14,15 +20,14 @@ export default defineNuxtModule<FeatureFlagsConfig>({
     configKey: 'featureFlags',
   },
   async setup(options, nuxt) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const resolver = createResolver(import.meta.url)
 
+    nuxt.options.alias['#feature-flags'] = './types/nuxt-feature-flags.d.ts'
+
+    // Load feature flags configuration from file so that we can generated types from them
     if (options.config) {
       try {
-        consolador.info('Loading feature flags from:', options.config)
         const { config: configFlags, configFile } = await loadConfigFile(options.config, nuxt.options.rootDir)
-        consolador.info('Loaded feature flags:', configFlags)
         options.flags = defu(options.flags, configFlags || {})
 
         // For runtime usage
@@ -33,21 +38,10 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       }
     }
 
-    nuxt.options.runtimeConfig.public.featureFlags = defu(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      nuxt.options.runtimeConfig.public.featureFlags, options)
+    nuxt.options.runtimeConfig.public.featureFlags = defu(nuxt.options.runtimeConfig.public.featureFlags, options)
 
-    nuxt.options.nitro = nuxt.options.nitro || {}
-    nuxt.options.nitro.imports = nuxt.options.nitro.imports || {}
-    nuxt.options.nitro.imports.presets = nuxt.options.nitro.imports.presets || []
-    nuxt.options.nitro.imports.presets.push({
-      from: resolver.resolve('./runtime/server/composables'),
-      imports: ['useServerFlags'],
-    })
-
+    addServerImportsDir(resolver.resolve('./runtime/server/utils'))
     addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.server'))
-
     addImports({
       name: 'useFeatureFlags',
       from: resolver.resolve('./runtime/app/composables/feature-flags'),
@@ -58,6 +52,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       route: '/api/_feature-flags/feature-flags',
       method: 'get',
     })
+
     // Generate types from featureFlags config
     addTypeTemplate({
       filename: 'types/nuxt-feature-flags.d.ts',
@@ -68,7 +63,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
           .join('\n')
 
         return `export interface FlagsSchema {
-  ${flagEntries}
+${flagEntries}
 }`
       },
     })

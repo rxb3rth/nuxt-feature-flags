@@ -2,13 +2,13 @@ import type { H3Event, H3EventContext } from 'h3'
 import { createJiti } from 'jiti'
 import { useRuntimeConfig } from 'nitropack/runtime'
 import type { FlagDefinition } from '../types'
-import type { FlagsSchema } from '#build/types/nuxt-feature-flags'
+import type { FlagsSchema } from '#feature-flags'
 
 async function getFlags(context?: H3EventContext) {
   const runtimeConfig = useRuntimeConfig()
 
   if (!runtimeConfig._feature_flags_config_path) {
-    return context?.public?.featureFlags?.flags || {}
+    return runtimeConfig.public.featureFlags.flags || {}
   }
 
   try {
@@ -25,7 +25,7 @@ async function getFlags(context?: H3EventContext) {
   }
 }
 
-export async function useServerFlags(event: H3Event) {
+export async function getFeatureFlags(event: H3Event) {
   const flags = await getFlags(event.context) as FlagsSchema
 
   return {

@@ -1,6 +1,6 @@
 import { eventHandler } from 'h3'
-import { useServerFlags } from '../composables'
+import { getFeatureFlags } from '../utils/feature-flags'
 
 export default eventHandler(async (event) => {
-  return await useServerFlags(event)
+  return await getFeatureFlags(event)
 })
