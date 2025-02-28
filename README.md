@@ -10,6 +10,9 @@
 
 A powerful, type-safe feature flag module for Nuxt 3 that enables both static and dynamic feature flag evaluation with server-side support. Perfect for A/B testing, gradual rollouts, and feature management.
 
+> [!WARNING]
+> This project is just getting started, so things are gonna change a lot. Updates will roll out often, and we’re totally open to feedback—hit us up with your thoughts!
+
 ## ✨ Features
 
 - 🎯 **Context-aware evaluation**: Evaluate flags based on request context (user roles, geo-location, device type, etc.)
