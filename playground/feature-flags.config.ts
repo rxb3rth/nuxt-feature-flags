@@ -1,7 +1,6 @@
-import type { H3EventContext } from 'h3'
+import { defineFeatureFlagsConfig } from '../src/module'
 
-// Context available only on server, context will be undefined at the client side
-export default function featureFlagsConfig(context?: H3EventContext) {
+export default defineFeatureFlagsConfig((context) => {
   return {
     isAdmin: context?.user?.role === 'admin',
     newDashboard: true,
@@ -9,4 +8,4 @@ export default function featureFlagsConfig(context?: H3EventContext) {
     promoBanner: false,
     betaFeature: false,
   }
-}
+})

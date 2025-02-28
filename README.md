@@ -55,16 +55,16 @@ export default defineNuxtConfig({
 
 // Advanced usage with context-based flag rules
 // feature-flags.config.ts
-import type { H3EventContext } from 'h3'
+import { defineFeatureFlagsConfig } from 'nuxt-feature-flags'
 
-export default function featureFlagsConfig(context?: H3EventContext) {
+export default defineFeatureFlagsConfig((context) => {
   return {
     isAdmin: context?.user?.role === 'admin',
     newDashboard: true,
     experimentalFeature: process.env.NODE_ENV === 'development',
     betaFeature: context?.user?.isBetaTester ?? false,
   }
-}
+})
 ```
 
 2. Use in your Vue components:
@@ -174,9 +174,9 @@ export default {
 
 ```ts
 // feature-flags.config.ts
-import type { H3EventContext } from 'h3'
+import { defineFeatureFlagsConfig } from 'nuxt-feature-flags'
 
-export default function featureFlagsConfig(context?: H3EventContext) {
+export default defineFeatureFlagsConfig((context) => {
   return {
     // User role-based flag
     isAdmin: context?.user?.role === 'admin',
@@ -190,7 +190,7 @@ export default function featureFlagsConfig(context?: H3EventContext) {
     // Device-based flag
     mobileFeature: context?.device?.isMobile ?? false,
   }
-}
+})
 ```
 
 ## 🤝 Contributing
