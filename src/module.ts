@@ -4,6 +4,8 @@ import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
 import { loadConfigFile } from './runtime/core/config-loader'
 
+export * from './runtime/core/config-schema'
+
 export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
     name: 'nuxt-feature-flags',
