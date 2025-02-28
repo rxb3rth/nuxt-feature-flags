@@ -46,13 +46,11 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       imports: ['useServerFlags'],
     })
 
-    addPlugin({
-      src: resolver.resolve('./runtime/plugin'),
-    })
+    addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.server'))
 
     addImports({
-      name: 'useClientFlags',
-      from: resolver.resolve('./runtime/composables'),
+      name: 'useFeatureFlags',
+      from: resolver.resolve('./runtime/app/composables/feature-flags'),
     })
 
     addServerHandler({
