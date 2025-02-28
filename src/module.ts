@@ -2,7 +2,7 @@ import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler, addServerImportsDir } from '@nuxt/kit'
 import type { FeatureFlagsConfig } from './runtime/types'
 import { consolador } from './runtime/logger'
-import { loadConfigFile } from './runtime/config-loader'
+import { loadConfigFile } from './runtime/core/config-loader'
 
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {
