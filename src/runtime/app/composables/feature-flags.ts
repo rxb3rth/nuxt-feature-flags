@@ -1,7 +1,7 @@
 import { useRequestFetch, useState } from '#imports'
-import type { FlagsSchema } from '#build/types/nuxt-feature-flags'
+import type { FlagsSchema } from '#feature-flags'
 
-export function useClientFlags() {
+export function useFeatureFlags() {
   const flags = useState<FlagsSchema>('feature-flags', () => ({}))
 
   const fetch = async () => {
