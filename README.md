@@ -55,9 +55,9 @@ export default defineNuxtConfig({
 
 // Advanced usage with context-based flag rules
 // feature-flags.config.ts
-import { defineFeatureFlagsConfig } from 'nuxt-feature-flags'
+import { defineFeatureFlags } from '#feature-flags/handler'
 
-export default defineFeatureFlagsConfig((context) => {
+export default defineFeatureFlags((context) => {
   return {
     isAdmin: context?.user?.role === 'admin',
     newDashboard: true,
@@ -174,9 +174,9 @@ export default {
 
 ```ts
 // feature-flags.config.ts
-import { defineFeatureFlagsConfig } from 'nuxt-feature-flags'
+import { defineFeatureFlags } from '#feature-flags/handler'
 
-export default defineFeatureFlagsConfig((context) => {
+export default defineFeatureFlags((context) => {
   return {
     // User role-based flag
     isAdmin: context?.user?.role === 'admin',
@@ -241,15 +241,3 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
