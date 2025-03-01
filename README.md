@@ -161,13 +161,15 @@ export default defineNuxtConfig({
 })
 
 // feature-flags.config.ts
-export default {
+import { defineFeatureFlags } from '#feature-flags/handler'
+
+export default defineFeatureFlags(() => {
   isAdmin: false,
   newDashboard: true,
   experimentalFeature: true,
   promoBanner: false,
   betaFeature: false,
-}
+})
 ```
 
 ### 3. Context-Aware Configuration
