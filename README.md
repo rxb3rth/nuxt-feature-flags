@@ -71,7 +71,7 @@ export default defineFeatureFlags((context) => {
 
 ```vue
 <script setup>
-const { isEnabled } = useClientFlags()
+const { isEnabled } = useFeatureFlags()
 </script>
 
 <template>
@@ -86,7 +86,7 @@ const { isEnabled } = useClientFlags()
 ```ts
 // server/api/dashboard.ts
 export default defineEventHandler(async (event) => {
-  const { isEnabled } = await useServerFlags(event)
+  const { isEnabled } = await getFeatureFlags(event)
 
   if (!isEnabled('newDashboard')) {
     throw createError({
@@ -112,7 +112,7 @@ export default defineEventHandler(async (event) => {
 const { 
   flags,       // Reactive flags object
   isEnabled,   // (flagName: string) => boolean
-} = useClientFlags()
+} = useFeatureFlags()
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
@@ -126,7 +126,7 @@ if (isEnabled('newFeature')) {
 const { 
   flags,       // Flags object
   isEnabled,   // (flagName: string) => boolean
-} = await useServerFlags(event)
+} = await getFeatureFlags(event)
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
