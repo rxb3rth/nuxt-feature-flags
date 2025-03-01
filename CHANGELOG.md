@@ -1,3 +1,7 @@
+## v0.5.0
+
+[compare changes](https://github.com/rxb3rth/nuxt-feature-flags/compare/v0.4.0...v0.5.0)
+
 # Changelog
 
 
