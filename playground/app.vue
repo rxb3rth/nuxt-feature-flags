@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isEnabled, flags } = useClientFlags()
+const { isEnabled, flags } = useFeatureFlags()
 
 console.log(flags.value)
 </script>
