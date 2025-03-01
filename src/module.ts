@@ -50,9 +50,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
 
         options.flags = defu(options.flags, configFlags || {})
         nuxt.options.alias['#feature-flags/config'] = configFile!
-
-        // For runtime usage
-        nuxt.options.runtimeConfig._feature_flags_config_path = configFile
       }
       catch (error) {
         consolador.error('Failed to load feature flags configuration:', error)
