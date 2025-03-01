@@ -3,7 +3,8 @@ export default defineEventHandler(async (event) => {
     role: 'admin',
   }
 
-  const { isEnabled, flags } = await useServerFlags(event)
+  const { isEnabled, flags } = await getFeatureFlags(event)
+
   console.log('New request: ' + getRequestURL(event))
   console.log('newDashboard.isEnabled', isEnabled('newDashboard'))
   console.log('isAdmin', isEnabled('isAdmin'))

@@ -1,6 +1,6 @@
-import { defineFeatureFlagsConfig } from '../src/module'
+import { defineFeatureFlags } from '#feature-flags/handler'
 
-export default defineFeatureFlagsConfig((context) => {
+export default defineFeatureFlags((context) => {
   return {
     isAdmin: context?.user?.role === 'admin',
     newDashboard: true,

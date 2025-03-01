@@ -1,16 +1,15 @@
+import { existsSync } from 'node:fs'
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler, addServerImportsDir } from '@nuxt/kit'
-import type { FeatureFlagsConfig } from './runtime/types'
+import { loadConfig } from 'c12'
+import type { FeatureFlagsConfig, FlagDefinition } from './runtime/types'
 import { consolador } from './runtime/logger'
-import { loadConfigFile } from './runtime/core/config-loader'
 
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {
     featureFlags: FeatureFlagsConfig
   }
 }
-
-export * from './runtime/core/config-schema'
 
 export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
@@ -24,13 +23,33 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    nuxt.options.alias['#feature-flags'] = './types/nuxt-feature-flags.d.ts'
+    nuxt.options.runtimeConfig.public.featureFlags = defu(nuxt.options.runtimeConfig.public.featureFlags, options)
+
+    nuxt.options.alias['#feature-flags/types'] = './types/nuxt-feature-flags.d.ts'
+    nuxt.options.alias['#feature-flags/handler'] = resolver.resolve('./runtime/server/handlers/feature-flags.ts')
+    nuxt.options.alias['#feature-flags/config'] = resolver.resolve('./runtime/feature-flags.config.ts') // default config
 
     // Load feature flags configuration from file so that we can generated types from them
     if (options.config) {
       try {
-        const { config: configFlags, configFile } = await loadConfigFile(options.config, nuxt.options.rootDir)
+        const { config: configFlags, configFile } = await loadConfig<FlagDefinition>({
+          configFile: options.config.replace(/\.\w+$/, ''),
+          cwd: nuxt.options.rootDir,
+          jitiOptions: {
+            interopDefault: true,
+            moduleCache: true,
+            alias: {
+              '#feature-flags/handler': resolver.resolve('./runtime/server/handlers/feature-flags.ts'),
+            },
+          },
+        })
+
+        if (!existsSync(configFile!)) {
+          throw new Error(`${configFile} does not exist`)
+        }
+
         options.flags = defu(options.flags, configFlags || {})
+        nuxt.options.alias['#feature-flags/config'] = configFile!
 
         // For runtime usage
         nuxt.options.runtimeConfig._feature_flags_config_path = configFile
@@ -39,8 +58,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         consolador.error('Failed to load feature flags configuration:', error)
       }
     }
-
-    nuxt.options.runtimeConfig.public.featureFlags = defu(nuxt.options.runtimeConfig.public.featureFlags, options)
 
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
     addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.server'))

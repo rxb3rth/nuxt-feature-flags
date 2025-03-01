@@ -1,32 +1,9 @@
-import type { H3Event, H3EventContext } from 'h3'
-import { createJiti } from 'jiti'
-import { useRuntimeConfig } from 'nitropack/runtime'
-import type { FlagDefinition } from '../types'
+import type { H3Event } from 'h3'
+import featureFlagConfig from '#feature-flags/config'
 import type { FlagsSchema } from '#feature-flags'
 
-async function getFlags(context?: H3EventContext) {
-  const runtimeConfig = useRuntimeConfig()
-
-  if (!runtimeConfig._feature_flags_config_path) {
-    return runtimeConfig.public.featureFlags.flags || {}
-  }
-
-  try {
-    const jiti = createJiti(runtimeConfig._feature_flags_config_path, {
-      interopDefault: true,
-      moduleCache: true,
-    })
-    const configFn = await jiti.import<(context?: H3EventContext) => FlagDefinition>(runtimeConfig._feature_flags_config_path, { default: true })
-    return configFn(context)
-  }
-  catch (error) {
-    console.error('Error loading config file', error)
-    return {}
-  }
-}
-
-export async function getFeatureFlags(event: H3Event) {
-  const flags = await getFlags(event.context) as FlagsSchema
+export function getFeatureFlags(event: H3Event) {
+  const flags = featureFlagConfig(event.context) as FlagsSchema
 
   return {
     flags,
