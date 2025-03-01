@@ -3,7 +3,7 @@ import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler, addServerImportsDir } from '@nuxt/kit'
 import { loadConfig } from 'c12'
 import type { FeatureFlagsConfig, FlagDefinition } from './runtime/types'
-import { consolador } from './runtime/logger'
+import { logger } from './runtime/logger'
 
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {
@@ -52,7 +52,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         nuxt.options.alias['#feature-flags/config'] = configFile!
       }
       catch (error) {
-        consolador.error('Failed to load feature flags configuration:', error)
+        logger.error('Failed to load feature flags configuration:', error)
       }
     }
 
