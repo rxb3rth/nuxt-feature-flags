@@ -1,5 +1,5 @@
 import { useRequestFetch, useState } from '#imports'
-import type { FlagsSchema } from '#feature-flags'
+import type { FlagsSchema } from '#feature-flags/types'
 
 export function useFeatureFlags() {
   const flags = useState<FlagsSchema>('feature-flags', () => ({}))
