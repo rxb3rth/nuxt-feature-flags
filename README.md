@@ -86,7 +86,7 @@ const { isEnabled } = useFeatureFlags()
 ```ts
 // server/api/dashboard.ts
 export default defineEventHandler(async (event) => {
-  const { isEnabled } = await getFeatureFlags(event)
+  const { isEnabled } = getFeatureFlags(event)
 
   if (!isEnabled('newDashboard')) {
     throw createError({
