@@ -11,7 +11,7 @@
 A powerful, type-safe feature flag module for Nuxt 3 that enables both static and dynamic feature flag evaluation with server-side support. Perfect for A/B testing, gradual rollouts, and feature management.
 
 > [!WARNING]
-> This project is just getting started, so things are gonna change a lot. Updates will roll out often, and we’re totally open to feedback—hit us up with your thoughts!
+> This project is just getting started, so things are gonna change a lot. Updates will roll out often, and we're totally open to feedback—hit us up with your thoughts!
 
 ## ✨ Features
 
@@ -126,7 +126,7 @@ if (isEnabled('newFeature')) {
 const { 
   flags,       // Flags object
   isEnabled,   // (flagName: string) => boolean
-} = await getFeatureFlags(event)
+} = getFeatureFlags(event)
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
@@ -163,13 +163,13 @@ export default defineNuxtConfig({
 // feature-flags.config.ts
 import { defineFeatureFlags } from '#feature-flags/handler'
 
-export default defineFeatureFlags(() => {
+export default defineFeatureFlags(() => ({
   isAdmin: false,
   newDashboard: true,
   experimentalFeature: true,
   promoBanner: false,
   betaFeature: false,
-})
+}))
 ```
 
 ### 3. Context-Aware Configuration
