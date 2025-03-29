@@ -65,6 +65,13 @@ export default defineFeatureFlags((context) => {
     betaFeature: context?.user?.isBetaTester ?? false,
   }
 })
+
+// nuxt.config.ts
+export default defineNuxtConfig({
+  featureFlags: {
+    config: './feature-flags.config.ts',
+  }
+})
 ```
 
 2. Use in your Vue components:
