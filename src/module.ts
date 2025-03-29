@@ -15,7 +15,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   meta: {
     name: 'nuxt-feature-flags',
     compatibility: {
-      nuxt: '>=3.6.1',
+      nuxt: '>=3.1.0',
       bridge: false,
     },
     configKey: 'featureFlags',
