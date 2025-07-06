@@ -5,12 +5,14 @@ export function useFeatureFlags() {
   const flags = useState<FlagsSchema>('feature-flags', () => ({}))
 
   const fetch = async () => {
-    flags.value = await useRequestFetch()('/api/_feature-flags/feature-flags', {
+    const response = await useRequestFetch()('/api/_feature-flags/feature-flags', {
       headers: {
         accept: 'application/json',
       },
       retry: false,
-    }).catch(() => ({}))
+    }).catch(() => ({ flags: {} }))
+    
+    flags.value = response.flags || {}
   }
 
   return {

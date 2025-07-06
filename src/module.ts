@@ -27,7 +27,9 @@ export default defineNuxtModule<FeatureFlagsConfig>({
 
     nuxt.options.alias['#feature-flags/types'] = './types/nuxt-feature-flags.d.ts'
     nuxt.options.alias['#feature-flags/handler'] = resolver.resolve('./runtime/server/handlers/feature-flags')
-    nuxt.options.alias['#feature-flags/config'] = resolver.resolve('./runtime/feature-flags.config') // default config
+    
+    // Create default config that handles inline flags properly
+    let configPath = resolver.resolve('./runtime/feature-flags.config')
 
     // Load feature flags configuration from file so that we can generated types from them
     if (options.config) {
@@ -49,12 +51,14 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         }
 
         options.flags = defu(options.flags, configFlags || {})
-        nuxt.options.alias['#feature-flags/config'] = configFile!
+        configPath = configFile!
       }
       catch (error) {
         logger.error('Failed to load feature flags configuration:', error)
       }
     }
+    
+    nuxt.options.alias['#feature-flags/config'] = configPath
 
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
     addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.server'))
