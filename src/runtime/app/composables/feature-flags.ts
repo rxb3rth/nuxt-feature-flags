@@ -11,7 +11,7 @@ export function useFeatureFlags() {
       },
       retry: false,
     }).catch(() => ({ flags: {} }))
-    
+
     flags.value = response.flags || {}
   }
 

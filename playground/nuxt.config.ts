@@ -1,8 +1,9 @@
+// eslint-disable-next-line nuxt/nuxt-config-keys-order
 export default defineNuxtConfig({
   modules: ['../src/module'],
-  
+
   compatibilityDate: '2025-02-21',
-  
+
   future: {
     compatibilityVersion: 4,
   },

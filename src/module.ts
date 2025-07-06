@@ -27,7 +27,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
 
     nuxt.options.alias['#feature-flags/types'] = './types/nuxt-feature-flags.d.ts'
     nuxt.options.alias['#feature-flags/handler'] = resolver.resolve('./runtime/server/handlers/feature-flags')
-    
+
     // Create default config that handles inline flags properly
     let configPath = resolver.resolve('./runtime/feature-flags.config')
 
@@ -57,7 +57,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
         logger.error('Failed to load feature flags configuration:', error)
       }
     }
-    
+
     nuxt.options.alias['#feature-flags/config'] = configPath
 
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
