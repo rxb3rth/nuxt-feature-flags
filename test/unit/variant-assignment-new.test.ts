@@ -19,9 +19,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       const normalized = normalizeWeights(variants)
-      
+
       expect(normalized).toEqual([
         { name: 'control', weight: 50, cumulativeWeight: 50 },
         { name: 'treatment', weight: 50, cumulativeWeight: 100 },
@@ -33,9 +33,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 30 },
         { name: 'treatment', weight: 20 },
       ]
-      
+
       const normalized = normalizeWeights(variants)
-      
+
       expect(normalized).toEqual([
         { name: 'control', weight: 60, cumulativeWeight: 60 },
         { name: 'treatment', weight: 40, cumulativeWeight: 100 },
@@ -46,9 +46,9 @@ describe('variant assignment', () => {
       const variants: FlagVariant[] = [
         { name: 'single', weight: 100 },
       ]
-      
+
       const normalized = normalizeWeights(variants)
-      
+
       expect(normalized).toEqual([
         { name: 'single', weight: 100, cumulativeWeight: 100 },
       ])
@@ -59,9 +59,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 0 },
         { name: 'treatment', weight: 0 },
       ]
-      
+
       const normalized = normalizeWeights(variants)
-      
+
       expect(normalized).toEqual([
         { name: 'control', weight: 50, cumulativeWeight: 50 },
         { name: 'treatment', weight: 50, cumulativeWeight: 100 },
@@ -75,9 +75,9 @@ describe('variant assignment', () => {
         { name: 'c', weight: 25 },
         { name: 'd', weight: 25 },
       ]
-      
+
       const normalized = normalizeWeights(variants)
-      
+
       expect(normalized).toHaveLength(4)
       expect(normalized[0].weight).toBe(25)
       expect(normalized[3].cumulativeWeight).toBe(100)
@@ -90,10 +90,10 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       const result1 = assignVariant(variants, 25)
       const result2 = assignVariant(variants, 25)
-      
+
       expect(result1?.name).toBe(result2?.name)
       expect(result1?.weight).toBe(result2?.weight)
     })
@@ -103,7 +103,7 @@ describe('variant assignment', () => {
         { name: 'control', weight: 80 },
         { name: 'treatment', weight: 20 },
       ]
-      
+
       const results: string[] = []
       for (let i = 0; i < 100; i++) {
         const result = assignVariant(variants, i)
@@ -111,7 +111,7 @@ describe('variant assignment', () => {
           results.push(result.name)
         }
       }
-      
+
       const controlCount = results.filter(r => r === 'control').length
       expect(controlCount).toBeGreaterThan(70) // Should be around 80
     })
@@ -121,9 +121,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50, value: 'original' },
         { name: 'treatment', weight: 50, value: 'new' },
       ]
-      
+
       const result = assignVariant(variants, 25)
-      
+
       expect(result).not.toBeNull()
       expect(['control', 'treatment']).toContain(result!.name)
       expect(['original', 'new']).toContain(result!.value)
@@ -134,13 +134,14 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50, value: 'new' },
       ]
-      
+
       const result = assignVariant(variants, 25)
-      
+
       expect(result).not.toBeNull()
       if (result!.name === 'control') {
         expect(result!.value).toBeUndefined()
-      } else if (result!.name === 'treatment') {
+      }
+      else if (result!.name === 'treatment') {
         expect(result!.value).toBe('new')
       }
     })
@@ -150,10 +151,10 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       const result1 = assignVariant(variants, 25)
       const result2 = assignVariant(variants, 75)
-      
+
       expect(result1).not.toBeNull()
       expect(result2).not.toBeNull()
       // Different hashes might assign different variants
@@ -165,12 +166,12 @@ describe('variant assignment', () => {
   describe('generateVariantHash', () => {
     it('should generate consistent hash for same input', () => {
       mockDigest.mockReturnValue('5d41402abc4b2a76b9719d911017c592')
-      
+
       const context = { userId: 'user123' }
-      
+
       const hash1 = generateVariantHash('test-flag', context)
       const hash2 = generateVariantHash('test-flag', context)
-      
+
       expect(hash1).toBe(hash2)
     })
 
@@ -180,12 +181,12 @@ describe('variant assignment', () => {
         callCount++
         return callCount === 1 ? '5d41402abc4b2a76b9719d911017c592' : 'abcd1234efgh5678ijkl9012mnop3456'
       })
-      
+
       const context = { userId: 'user123' }
-      
+
       const hash1 = generateVariantHash('flag1', context)
       const hash2 = generateVariantHash('flag2', context)
-      
+
       expect(hash1).not.toBe(hash2)
     })
 
@@ -195,42 +196,42 @@ describe('variant assignment', () => {
         callCount++
         return callCount === 1 ? '5d41402abc4b2a76b9719d911017c592' : 'abcd1234efgh5678ijkl9012mnop3456'
       })
-      
+
       const hash1 = generateVariantHash('test-flag', { userId: 'user1' })
       const hash2 = generateVariantHash('test-flag', { userId: 'user2' })
-      
+
       expect(hash1).not.toBe(hash2)
     })
 
     it('should fallback to sessionId when userId is not available', () => {
       mockDigest.mockReturnValue('5d41402abc4b2a76b9719d911017c592')
-      
+
       const context = { sessionId: 'session123' }
-      
+
       const hash = generateVariantHash('test-flag', context)
-      
+
       expect(hash).toBeGreaterThanOrEqual(0)
       expect(hash).toBeLessThan(100)
     })
 
     it('should fallback to ipAddress when userId and sessionId are not available', () => {
       mockDigest.mockReturnValue('5d41402abc4b2a76b9719d911017c592')
-      
+
       const context = { ipAddress: '192.168.1.1' }
-      
+
       const hash = generateVariantHash('test-flag', context)
-      
+
       expect(hash).toBeGreaterThanOrEqual(0)
       expect(hash).toBeLessThan(100)
     })
 
     it('should use anonymous fallback when no context is available', () => {
       mockDigest.mockReturnValue('5d41402abc4b2a76b9719d911017c592')
-      
+
       const context = {}
-      
+
       const hash = generateVariantHash('test-flag', context)
-      
+
       expect(hash).toBeGreaterThanOrEqual(0)
       expect(hash).toBeLessThan(100)
     })
@@ -239,7 +240,7 @@ describe('variant assignment', () => {
   describe('getVariantForFlag', () => {
     it('should return null for empty variants', () => {
       const result = getVariantForFlag('test-flag', [], { userId: 'user123' })
-      
+
       expect(result).toBeNull()
     })
 
@@ -248,9 +249,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       const result = getVariantForFlag('test-flag', variants, { userId: 'user123' })
-      
+
       expect(result).not.toBeNull()
       expect(['control', 'treatment']).toContain(result!.name)
     })
@@ -260,10 +261,10 @@ describe('variant assignment', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       const result1 = getVariantForFlag('test-flag', variants, { userId: 'user123' })
       const result2 = getVariantForFlag('test-flag', variants, { userId: 'user123' })
-      
+
       expect(result1?.name).toBe(result2?.name)
     })
   })
@@ -271,7 +272,7 @@ describe('variant assignment', () => {
   describe('edge cases', () => {
     it('should handle empty variant array', () => {
       const result = assignVariant([], 50)
-      
+
       expect(result).toBeNull()
     })
 
@@ -280,9 +281,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 0 },
         { name: 'treatment', weight: 0 },
       ]
-      
+
       const result = assignVariant(variants, 50)
-      
+
       expect(result).not.toBeNull()
       expect(['control', 'treatment']).toContain(result!.name)
     })
@@ -292,9 +293,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 1000 },
         { name: 'treatment', weight: 2000 },
       ]
-      
+
       const result = assignVariant(variants, 50)
-      
+
       expect(result).not.toBeNull()
       expect(['control', 'treatment']).toContain(result!.name)
     })
@@ -304,9 +305,9 @@ describe('variant assignment', () => {
         { name: 'control', weight: 33.33 },
         { name: 'treatment', weight: 66.67 },
       ]
-      
+
       const result = assignVariant(variants, 50)
-      
+
       expect(result).not.toBeNull()
       expect(['control', 'treatment']).toContain(result!.name)
     })

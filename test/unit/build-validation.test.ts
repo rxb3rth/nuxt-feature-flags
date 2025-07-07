@@ -43,7 +43,7 @@ describe('build-time validation', () => {
       }
 
       expect(variantConfig.flags.abTest.variants).toHaveLength(2)
-      
+
       const totalWeight = variantConfig.flags.abTest.variants
         .reduce((sum, variant) => sum + variant.weight, 0)
       expect(totalWeight).toBe(100)
@@ -76,10 +76,11 @@ describe('build-time validation', () => {
 
       testCases.forEach(({ variants, expectedValid }) => {
         const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0)
-        
+
         if (expectedValid) {
           expect(totalWeight).toBeLessThanOrEqual(100)
-        } else {
+        }
+        else {
           expect(totalWeight).toBeGreaterThan(100)
         }
       })
@@ -90,13 +91,13 @@ describe('build-time validation', () => {
     it('should detect common usage patterns', () => {
       const usagePatterns = [
         'v-feature="flagName"',
-        "v-feature='flagName'",
+        'v-feature=\'flagName\'',
         'isEnabled("flagName")',
-        "isEnabled('flagName')",
+        'isEnabled(\'flagName\')',
         'getVariant("flagName")',
-        "getVariant('flagName')",
+        'getVariant(\'flagName\')',
         'getValue("flagName")',
-        "getValue('flagName')",
+        'getValue(\'flagName\')',
       ]
 
       const flagNameRegex = /(?:v-feature=|isEnabled\(|getVariant\(|getValue\()["']([^"']+)["']/g
@@ -111,7 +112,7 @@ describe('build-time validation', () => {
     it('should extract flag names from variant syntax', () => {
       const variantPatterns = [
         'isEnabled("flagName:variantA")',
-        "isEnabled('flagName:variantB')",
+        'isEnabled(\'flagName:variantB\')',
       ]
 
       variantPatterns.forEach((pattern) => {
@@ -172,7 +173,7 @@ describe('build-time validation', () => {
         '123invalid', // Starting with number
       ]
 
-      const validNamePattern = /^[a-zA-Z][a-zA-Z0-9_-]*$/
+      const validNamePattern = /^[a-z][\w-]*$/i
 
       invalidNames.forEach((name) => {
         expect(validNamePattern.test(name)).toBe(false)
@@ -187,7 +188,7 @@ describe('build-time validation', () => {
 
       const names = variants.map(v => v.name)
       const uniqueNames = new Set(names)
-      
+
       expect(names.length).toBe(2)
       expect(uniqueNames.size).toBe(1) // Duplicates detected
     })
@@ -201,7 +202,7 @@ describe('build-time validation', () => {
       incompleteVariants.forEach((variant) => {
         const hasName = 'name' in variant && typeof variant.name === 'string'
         const hasWeight = 'weight' in variant && typeof variant.weight === 'number'
-        
+
         expect(hasName && hasWeight).toBe(false)
       })
     })
@@ -215,7 +216,7 @@ describe('build-time validation', () => {
           // Simple boolean flags
           debugMode: false,
           maintenanceMode: false,
-          
+
           // Feature rollout with gradual increase
           newCheckout: {
             enabled: true,
@@ -224,7 +225,7 @@ describe('build-time validation', () => {
               { name: 'new', weight: 30, value: true },
             ],
           },
-          
+
           // A/B test with multiple variants
           buttonColor: {
             enabled: true,
@@ -241,16 +242,16 @@ describe('build-time validation', () => {
       // Validate structure
       expect(realWorldConfig.environment).toBe('production')
       expect(Object.keys(realWorldConfig.flags)).toHaveLength(4)
-      
+
       // Validate boolean flags
       expect(realWorldConfig.flags.debugMode).toBe(false)
       expect(realWorldConfig.flags.maintenanceMode).toBe(false)
-      
+
       // Validate variant flags
       const checkoutVariants = realWorldConfig.flags.newCheckout.variants
       const checkoutTotal = checkoutVariants.reduce((sum, v) => sum + v.weight, 0)
       expect(checkoutTotal).toBe(100)
-      
+
       const colorVariants = realWorldConfig.flags.buttonColor.variants
       const colorTotal = colorVariants.reduce((sum, v) => sum + v.weight, 0)
       expect(colorTotal).toBe(100)
@@ -275,7 +276,7 @@ describe('build-time validation', () => {
       // Check that same flags exist across environments
       const envKeys = Object.keys(environments)
       const flagsPerEnv = envKeys.map(env => Object.keys(environments[env as keyof typeof environments]))
-      
+
       // All environments should have the same flags (in this case)
       expect(flagsPerEnv[0]).toEqual(flagsPerEnv[1])
       expect(flagsPerEnv[1]).toEqual(flagsPerEnv[2])

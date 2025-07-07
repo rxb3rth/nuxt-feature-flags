@@ -15,10 +15,10 @@ export interface BuildValidationOptions {
  */
 function extractFlagUsageFromCode(filePath: string): string[] {
   const flags: string[] = []
-  
+
   try {
     const content = readFileSync(filePath, 'utf-8')
-    
+
     // Match isEnabled('flagName') or isEnabled('flagName:variant')
     const isEnabledMatches = content.match(/isEnabled\(['"`]([^'"`]+)['"`]\)/g)
     if (isEnabledMatches) {
@@ -29,7 +29,7 @@ function extractFlagUsageFromCode(filePath: string): string[] {
         }
       }
     }
-    
+
     // Match v-feature="'flagName'" or v-feature="'flagName:variant'"
     const vFeatureMatches = content.match(/v-feature=['"`]([^'"`]+)['"`]/g)
     if (vFeatureMatches) {
@@ -40,7 +40,7 @@ function extractFlagUsageFromCode(filePath: string): string[] {
         }
       }
     }
-    
+
     // Match template conditions like v-if="isEnabled('flagName')"
     const vIfMatches = content.match(/v-if=['"`][^'"`]*isEnabled\(['"`]([^'"`]+)['"`]\)[^'"`]*['"`]/g)
     if (vIfMatches) {
@@ -55,7 +55,7 @@ function extractFlagUsageFromCode(filePath: string): string[] {
   catch (error) {
     logger.warn(`Failed to read file ${filePath}:`, error)
   }
-  
+
   return flags
 }
 
@@ -64,11 +64,11 @@ function extractFlagUsageFromCode(filePath: string): string[] {
  */
 async function scanSourceFiles(patterns: string[]): Promise<string[]> {
   const flags: string[] = []
-  
+
   for (const pattern of patterns) {
     try {
       const files = await glob(pattern, { ignore: ['**/node_modules/**', '**/dist/**', '**/.nuxt/**'] })
-      
+
       for (const file of files) {
         const fileFlags = extractFlagUsageFromCode(file)
         flags.push(...fileFlags)
@@ -78,7 +78,7 @@ async function scanSourceFiles(patterns: string[]): Promise<string[]> {
       logger.warn(`Failed to scan pattern ${pattern}:`, error)
     }
   }
-  
+
   // Remove duplicates
   return Array.from(new Set(flags))
 }
@@ -88,17 +88,17 @@ async function scanSourceFiles(patterns: string[]): Promise<string[]> {
  */
 export async function validateFeatureFlags(options: BuildValidationOptions = {}): Promise<ValidationError[]> {
   const errors: ValidationError[] = []
-  
+
   // Default options
   const {
     configPath = 'feature-flags.config.ts',
     srcPatterns = ['**/*.vue', '**/*.ts', '**/*.js', '**/*.tsx', '**/*.jsx'],
     failOnErrors = false,
   } = options
-  
+
   // Load and validate flag configuration
   let declaredFlags: string[] = []
-  
+
   if (existsSync(configPath)) {
     try {
       // This is a simplified version - in practice, you'd want to use the same
@@ -111,12 +111,12 @@ export async function validateFeatureFlags(options: BuildValidationOptions = {})
           moduleCache: false,
         },
       })
-      
+
       if (config) {
         // Validate flag configuration
         const configErrors = validateFlagDefinition(config)
         errors.push(...configErrors)
-        
+
         // Extract declared flag names
         declaredFlags = Object.keys(config)
       }
@@ -136,25 +136,25 @@ export async function validateFeatureFlags(options: BuildValidationOptions = {})
       type: 'config',
     })
   }
-  
+
   // Scan source files for flag usage
   try {
     const usedFlags = await scanSourceFiles(srcPatterns)
-    
+
     // Check for undeclared flags
     const undeclaredErrors = checkUndeclaredFlags(declaredFlags, usedFlags)
     errors.push(...undeclaredErrors)
-    
+
     // Log summary
     logger.info(`Found ${declaredFlags.length} declared flags`)
     logger.info(`Found ${usedFlags.length} unique flag usages in code`)
-    
+
     if (errors.length > 0) {
       logger.error(`Found ${errors.length} validation errors:`)
       for (const error of errors) {
         logger.error(`  [${error.type}] ${error.flag}: ${error.error}`)
       }
-      
+
       if (failOnErrors) {
         throw new Error(`Feature flag validation failed with ${errors.length} errors`)
       }
@@ -167,7 +167,7 @@ export async function validateFeatureFlags(options: BuildValidationOptions = {})
     if (error instanceof Error && error.message.includes('validation failed')) {
       throw error
     }
-    
+
     logger.error('Failed to validate feature flags:', error)
     errors.push({
       flag: 'validation',
@@ -175,6 +175,6 @@ export async function validateFeatureFlags(options: BuildValidationOptions = {})
       type: 'config',
     })
   }
-  
+
   return errors
 }

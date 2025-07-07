@@ -26,7 +26,7 @@ describe('getFeatureFlags server util', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     mockEvent = {
       node: {
         req: {
@@ -39,7 +39,7 @@ describe('getFeatureFlags server util', () => {
 
     mockGetCookie.mockReturnValue(undefined)
     mockGetVariantForFlag.mockReturnValue({ name: 'control', weight: 50, value: 'control-value' })
-    
+
     // Set up runtime config mock
     mockUseRuntimeConfig.mockReturnValue({
       featureFlags: {
@@ -62,33 +62,33 @@ describe('getFeatureFlags server util', () => {
   describe('context extraction', () => {
     it('should extract user ID from context', () => {
       mockEvent.context.user = { id: 'user123' }
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
       expect(result.isEnabled).toBeInstanceOf(Function)
     })
 
     it('should extract session ID from cookie', () => {
       mockGetCookie.mockReturnValue('session123')
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
       expect(mockGetCookie).toHaveBeenCalledWith(mockEvent, 'session-id')
     })
 
     it('should extract IP address from request', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
     })
 
     it('should handle forwarded headers', () => {
       mockEvent.node.req.headers['x-forwarded-for'] = '192.168.1.1, 10.0.0.1'
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
     })
   })
@@ -96,7 +96,7 @@ describe('getFeatureFlags server util', () => {
   describe('flag resolution', () => {
     it('should resolve simple boolean flags', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags.simpleFlag).toEqual({
         enabled: true,
         value: true,
@@ -105,9 +105,9 @@ describe('getFeatureFlags server util', () => {
 
     it('should resolve variant flags', () => {
       mockGetVariantForFlag.mockReturnValue({ name: 'treatment', weight: 50, value: 'B' })
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags.complexFlag).toEqual({
         enabled: true,
         value: 'B',
@@ -117,7 +117,7 @@ describe('getFeatureFlags server util', () => {
 
     it('should handle disabled flags', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags.disabledFlag).toEqual({
         enabled: false,
         value: false,
@@ -130,9 +130,9 @@ describe('getFeatureFlags server util', () => {
         weight: 50,
         value: 'control-variant',
       })
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags.complexFlag).toEqual({
         enabled: true,
         value: 'control-variant',
@@ -144,7 +144,7 @@ describe('getFeatureFlags server util', () => {
   describe('error handling', () => {
     it('should handle missing config gracefully', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
       expect(typeof result.isEnabled).toBe('function')
     })
@@ -153,7 +153,7 @@ describe('getFeatureFlags server util', () => {
       mockGetVariantForFlag.mockImplementation(() => {
         throw new Error('Variant assignment failed')
       })
-      
+
       expect(() => getFeatureFlags(mockEvent)).not.toThrow()
     })
   })
@@ -161,26 +161,26 @@ describe('getFeatureFlags server util', () => {
   describe('context fallbacks', () => {
     it('should handle missing context gracefully', () => {
       mockEvent.context = {}
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
     })
 
     it('should prioritize user context over other identifiers', () => {
       mockEvent.context.user = { id: 'user123' }
       mockEvent.context.userId = 'fallback-user'
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
     })
 
     it('should use fallback userId from context', () => {
       mockEvent.context.userId = 'context-user-id'
-      
+
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.flags).toBeDefined()
     })
   })
@@ -188,7 +188,7 @@ describe('getFeatureFlags server util', () => {
   describe('utility methods', () => {
     it('should provide isEnabled method', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.isEnabled('simpleFlag')).toBe(true)
       expect(result.isEnabled('disabledFlag')).toBe(false)
       expect(result.isEnabled('nonExistentFlag')).toBe(false)
@@ -196,14 +196,14 @@ describe('getFeatureFlags server util', () => {
 
     it('should provide getVariant method', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.getVariant('complexFlag')).toBe('control')
       expect(result.getVariant('simpleFlag')).toBeUndefined()
     })
 
     it('should provide getValue method', () => {
       const result = getFeatureFlags(mockEvent)
-      
+
       expect(result.getValue('simpleFlag')).toBe(true)
       expect(result.getValue('complexFlag')).toBe('control-value')
     })

@@ -196,7 +196,7 @@ describe('validation', () => {
     it('detects undeclared flags', () => {
       const declaredFlags = ['flagA', 'flagB']
       const usedFlags = ['flagA', 'flagC', 'flagD:variant']
-      
+
       const errors = checkUndeclaredFlags(declaredFlags, usedFlags)
       expect(errors).toHaveLength(2)
       expect(errors[0].flag).toBe('flagC')
@@ -206,7 +206,7 @@ describe('validation', () => {
     it('handles variant syntax in used flags', () => {
       const declaredFlags = ['flagA', 'flagB']
       const usedFlags = ['flagA:control', 'flagB:treatment']
-      
+
       const errors = checkUndeclaredFlags(declaredFlags, usedFlags)
       expect(errors).toHaveLength(0)
     })
@@ -214,7 +214,7 @@ describe('validation', () => {
     it('returns no errors when all flags are declared', () => {
       const declaredFlags = ['flagA', 'flagB', 'flagC']
       const usedFlags = ['flagA', 'flagB:variant', 'flagC']
-      
+
       const errors = checkUndeclaredFlags(declaredFlags, usedFlags)
       expect(errors).toHaveLength(0)
     })

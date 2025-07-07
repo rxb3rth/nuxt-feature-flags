@@ -1,6 +1,6 @@
 // Mock for #imports
 export const useRequestFetch = () => () => Promise.resolve({ flags: {} })
-export const useState = (key: string, defaultFactory: () => any) => {
+export const useState = (key: string, defaultFactory: () => unknown) => {
   return {
     value: defaultFactory(),
   }

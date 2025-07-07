@@ -11,7 +11,7 @@ export default defineNuxtPlugin({
       beforeMount(el: HTMLElement, binding) {
         const flagName = binding.value
         const shouldShow = isEnabled(flagName)
-        
+
         if (!shouldShow) {
           el.style.display = 'none'
         }
@@ -19,7 +19,7 @@ export default defineNuxtPlugin({
       updated(el: HTMLElement, binding) {
         const flagName = binding.value
         const shouldShow = isEnabled(flagName)
-        
+
         if (!shouldShow) {
           el.style.display = 'none'
         }

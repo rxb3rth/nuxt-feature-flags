@@ -1,6 +1,6 @@
 // Mock types for testing
 export interface FlagsSchema {
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface ResolvedFlag {

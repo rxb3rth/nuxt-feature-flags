@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   console.log('New request: ' + getRequestURL(event))
   console.log('newDashboard.isEnabled', isEnabled('newDashboard'))
   console.log('isAdmin', isEnabled('isAdmin'))
-  
+
   // Demo variant usage
   console.log('abTestExample variant:', getVariant('abTestExample'))
   console.log('abTestExample value:', getValue('abTestExample'))

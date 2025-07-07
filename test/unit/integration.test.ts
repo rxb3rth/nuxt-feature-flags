@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
 import { fileURLToPath } from 'node:url'
+import { describe, it, expect } from 'vitest'
 
 // Mock the module resolution for testing
 const mockModuleConfig = {
@@ -106,7 +106,7 @@ describe('type safety', () => {
       { name: 'treatment', weight: 70, value: 'new-feature' },
     ]
 
-    variants.forEach(variant => {
+    variants.forEach((variant) => {
       expect(typeof variant.name).toBe('string')
       expect(typeof variant.weight).toBe('number')
       expect(variant.weight).toBeGreaterThan(0)
@@ -184,7 +184,7 @@ describe('edge cases and error handling', () => {
       { flags: null },
     ]
 
-    malformedConfigs.forEach(config => {
+    malformedConfigs.forEach((config) => {
       // Should not throw when processing
       expect(() => {
         const processed = {
@@ -198,7 +198,7 @@ describe('edge cases and error handling', () => {
 
   it('should handle missing flag access', () => {
     const flags = {}
-    
+
     // Accessing non-existent flags should be safe
     expect(flags['nonExistent']).toBeUndefined()
     expect(flags['nonExistent']?.enabled).toBeUndefined()
@@ -211,7 +211,7 @@ describe('edge cases and error handling', () => {
       [{ name: 'negative', weight: -10 }], // Negative weight
     ]
 
-    invalidVariants.forEach(variants => {
+    invalidVariants.forEach((variants) => {
       // Should handle gracefully without throwing
       expect(() => {
         const totalWeight = variants.reduce((sum, v) => sum + Math.max(0, v.weight), 0)
@@ -247,7 +247,7 @@ describe('performance considerations', () => {
     }
 
     expect(Object.keys(largeConfig.flags)).toHaveLength(1000)
-    
+
     // Basic operations should still be fast
     const startTime = performance.now()
     const enabledFlags = Object.entries(largeConfig.flags)
@@ -266,7 +266,7 @@ describe('performance considerations', () => {
     }))
 
     expect(complexVariants).toHaveLength(10)
-    
+
     const totalWeight = complexVariants.reduce((sum, v) => sum + v.weight, 0)
     expect(totalWeight).toBe(100)
   })

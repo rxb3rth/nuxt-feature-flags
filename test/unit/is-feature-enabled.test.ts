@@ -25,7 +25,7 @@ describe('isFeatureEnabled server handler', () => {
       mockRuntimeConfig.featureFlags.flags = {
         enabledFlag: true,
       }
-      
+
       expect(isFeatureEnabled('enabledFlag')).toBe(true)
     })
 
@@ -33,7 +33,7 @@ describe('isFeatureEnabled server handler', () => {
       mockRuntimeConfig.featureFlags.flags = {
         disabledFlag: false,
       }
-      
+
       expect(isFeatureEnabled('disabledFlag')).toBe(false)
     })
 
@@ -50,7 +50,7 @@ describe('isFeatureEnabled server handler', () => {
           value: 'test',
         },
       }
-      
+
       expect(isFeatureEnabled('objectFlag')).toBe(true)
     })
 
@@ -61,7 +61,7 @@ describe('isFeatureEnabled server handler', () => {
           value: 'test',
         },
       }
-      
+
       expect(isFeatureEnabled('objectFlag')).toBe(false)
     })
 
@@ -75,7 +75,7 @@ describe('isFeatureEnabled server handler', () => {
           ],
         },
       }
-      
+
       expect(isFeatureEnabled('variantFlag')).toBe(true)
     })
   })
@@ -111,7 +111,7 @@ describe('isFeatureEnabled server handler', () => {
         nullFlag: null,
         undefinedFlag: undefined,
       }
-      
+
       expect(isFeatureEnabled('nullFlag')).toBe(false)
       expect(isFeatureEnabled('undefinedFlag')).toBe(false)
     })
@@ -126,7 +126,7 @@ describe('isFeatureEnabled server handler', () => {
         oneFlag: 1,
         negativeFlag: -1,
       }
-      
+
       expect(isFeatureEnabled('zeroFlag')).toBe(false)
       expect(isFeatureEnabled('oneFlag')).toBe(true)
       expect(isFeatureEnabled('negativeFlag')).toBe(true)
@@ -137,7 +137,7 @@ describe('isFeatureEnabled server handler', () => {
         emptyArrayFlag: [],
         nonEmptyArrayFlag: ['item'],
       }
-      
+
       expect(isFeatureEnabled('emptyArrayFlag')).toBe(false)
       expect(isFeatureEnabled('nonEmptyArrayFlag')).toBe(true)
     })
@@ -146,13 +146,13 @@ describe('isFeatureEnabled server handler', () => {
   describe('configuration edge cases', () => {
     it('should handle missing flags configuration', () => {
       mockRuntimeConfig.featureFlags.flags = undefined
-      
+
       expect(isFeatureEnabled('anyFlag')).toBe(false)
     })
 
     it('should handle empty flags configuration', () => {
       mockRuntimeConfig.featureFlags.flags = {}
-      
+
       expect(isFeatureEnabled('anyFlag')).toBe(false)
     })
   })

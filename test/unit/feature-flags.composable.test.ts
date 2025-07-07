@@ -91,20 +91,20 @@ describe('useFeatureFlags composable', () => {
 
     it('should handle variant syntax correctly', () => {
       const { isEnabled } = useFeatureFlags()
-      
+
       // Correct variant
       expect(isEnabled('variantFlag:variantA')).toBe(true)
-      
+
       // Wrong variant
       expect(isEnabled('variantFlag:variantB')).toBe(false)
-      
+
       // No variant specified for variant flag
       expect(isEnabled('variantFlag')).toBe(true)
     })
 
     it('should handle flags without variants', () => {
       const { isEnabled } = useFeatureFlags()
-      
+
       // Should return false when variant is specified for non-variant flag
       expect(isEnabled('enabledFlag:someVariant')).toBe(false)
     })
@@ -147,7 +147,7 @@ describe('useFeatureFlags composable', () => {
 
     it('should return flag values correctly', () => {
       const { getValue } = useFeatureFlags()
-      
+
       expect(getValue('booleanFlag')).toBe(true)
       expect(getValue('stringFlag')).toBe('hello')
       expect(getValue('numberFlag')).toBe(42)
@@ -175,13 +175,13 @@ describe('useFeatureFlags composable', () => {
 
     it('should return complete flag objects', () => {
       const { getFlag } = useFeatureFlags()
-      
+
       expect(getFlag('fullFlag')).toEqual({
         enabled: true,
         variant: 'variantA',
         value: 'test',
       })
-      
+
       expect(getFlag('simpleFlag')).toEqual({
         enabled: false,
       })

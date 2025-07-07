@@ -69,7 +69,7 @@ describe('nuxt feature flags module', () => {
     it('should register required plugins and directories', () => {
       // Mock resolver
       const mockResolverInstance = {
-        resolve: vi.fn((path) => `/resolved/${path}`),
+        resolve: vi.fn(path => `/resolved/${path}`),
       }
       mockCreateResolver.mockReturnValue(mockResolverInstance)
 
@@ -88,7 +88,7 @@ describe('nuxt feature flags module', () => {
       // Mock setup function
       const setupFunction = (options: any, nuxt: any) => {
         const resolver = mockCreateResolver()
-        
+
         // Set runtime config
         nuxt.options.runtimeConfig.public.featureFlags = options
         nuxt.options.runtimeConfig.featureFlags = options
@@ -113,16 +113,16 @@ describe('nuxt feature flags module', () => {
 
       // Verify resolver was created
       expect(mockCreateResolver).toHaveBeenCalled()
-      
+
       // Verify runtime config was set
       expect(mockNuxt.options.runtimeConfig.public.featureFlags).toBe(testOptions)
       expect(mockNuxt.options.runtimeConfig.featureFlags).toBe(testOptions)
-      
+
       // Verify imports and plugins were added
       expect(mockAddImportsDir).toHaveBeenCalledWith('/resolved/runtime/composables')
       expect(mockAddPlugin).toHaveBeenCalledWith('/resolved/runtime/plugin')
       expect(mockAddImportsDir).toHaveBeenCalledWith('/resolved/runtime/middleware')
-      
+
       // Verify hook was registered
       expect(mockNuxt.hook).toHaveBeenCalledWith('ready', expect.any(Function))
     })
@@ -162,7 +162,7 @@ describe('nuxt feature flags module', () => {
   describe('validation integration', () => {
     it('should trigger validation on ready hook', async () => {
       const mockValidateFeatureFlags = vi.fn()
-      
+
       vi.doMock('../src/runtime/server/utils/validation', () => ({
         validateFeatureFlags: mockValidateFeatureFlags,
       }))
@@ -193,11 +193,12 @@ describe('nuxt feature flags module', () => {
 
     it('should handle validation errors gracefully', async () => {
       const mockValidateFeatureFlags = vi.fn().mockRejectedValue(new Error('Validation failed'))
-      
+
       const errorHandler = async () => {
         try {
           await mockValidateFeatureFlags({}, '/project')
-        } catch (error) {
+        }
+        catch (error) {
           expect(error).toBeInstanceOf(Error)
           expect((error as Error).message).toBe('Validation failed')
         }
@@ -226,7 +227,7 @@ describe('nuxt feature flags module', () => {
 
       // Server-side should have access to full config
       expect(runtimeConfig.featureFlags).toBe(testConfig)
-      
+
       // Client-side should have access through public config
       expect(runtimeConfig.public.featureFlags).toBe(testConfig)
     })

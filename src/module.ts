@@ -85,7 +85,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
             if (typeof value !== 'object' || value === null || Array.isArray(value)) {
               return `  ${key}: ${typeof value}`
             }
-            
+
             // For flag configs with variants, we still resolve to the base type
             // The variant logic is handled at runtime
             const flagConfig = value as { enabled?: boolean, value?: unknown }
@@ -93,7 +93,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
               const valueType = flagConfig.value !== undefined ? typeof flagConfig.value : 'boolean'
               return `  ${key}: ${valueType}`
             }
-            
+
             return `  ${key}: ${typeof value}`
           })
           .join('\n')

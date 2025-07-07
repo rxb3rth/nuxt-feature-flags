@@ -1,8 +1,8 @@
 import type { H3Event } from 'h3'
 import { getCookie } from 'h3'
-import { useRuntimeConfig } from '#imports'
 import type { FlagConfig, FlagValue, VariantContext } from '../../types/feature-flags'
 import { getVariantForFlag } from './variant-assignment'
+import { useRuntimeConfig } from '#imports'
 
 export interface ResolvedFlag {
   enabled: boolean
@@ -48,7 +48,8 @@ function resolveFlagValue(
     let enabled: boolean
     if (Array.isArray(flagValue)) {
       enabled = flagValue.length > 0
-    } else {
+    }
+    else {
       enabled = !!(flagValue as FlagValue)
     }
     return {
@@ -71,7 +72,7 @@ function resolveFlagValue(
   if (flagConfig.variants && flagConfig.variants.length > 0) {
     try {
       const assignedVariant = getVariantForFlag(flagName, flagConfig.variants, context)
-      
+
       if (assignedVariant) {
         return {
           enabled: true,
@@ -111,10 +112,10 @@ export function getFeatureFlags(event: H3Event) {
     isEnabled(flagName: string, variant?: string): boolean {
       const flag = resolvedFlags[flagName]
       if (!flag?.enabled) return false
-      
+
       // If variant is specified, check if it matches
       if (variant && flag.variant !== variant) return false
-      
+
       return true
     },
     getVariant(flagName: string): string | undefined {

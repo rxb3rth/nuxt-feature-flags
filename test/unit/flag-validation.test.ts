@@ -17,7 +17,7 @@ describe('feature flag validation', () => {
       expect(validateFlagNaming('valid_flag')).toBeNull()
       expect(validateFlagNaming('valid-flag')).toBeNull()
       expect(validateFlagNaming('validFlag123')).toBeNull()
-      
+
       // Invalid flag names
       expect(validateFlagNaming('invalid flag')).not.toBeNull()
       expect(validateFlagNaming('invalid@flag')).not.toBeNull()
@@ -30,25 +30,25 @@ describe('feature flag validation', () => {
         { name: 'control', weight: 50 },
         { name: 'treatment', weight: 50 },
       ]
-      
+
       expect(validateVariants('testFlag', validVariants)).toEqual([])
-      
+
       // Invalid total weight
       const invalidWeightVariants = [
         { name: 'control', weight: 60 },
         { name: 'treatment', weight: 60 },
       ]
-      
+
       const weightErrors = validateVariants('testFlag', invalidWeightVariants)
       expect(weightErrors).toHaveLength(1)
       expect(weightErrors[0].error).toContain('exceed 100%')
-      
+
       // Duplicate variant names
       const duplicateVariants = [
         { name: 'control', weight: 50 },
         { name: 'control', weight: 50 },
       ]
-      
+
       const duplicateErrors = validateVariants('testFlag', duplicateVariants)
       expect(duplicateErrors).toHaveLength(1)
       expect(duplicateErrors[0].error).toContain('Duplicate')
@@ -66,15 +66,15 @@ describe('feature flag validation', () => {
           ],
         } as any,
       }
-      
+
       const errors = validateFlagDefinition(flagDefinition)
       expect(errors).toEqual([])
-      
+
       // Test individual flag config validation
       const validConfig = { enabled: true }
       const validErrors = validateFlagConfig('testFlag', validConfig)
       expect(validErrors).toEqual([])
-      
+
       // Test flag config with invalid structure
       const invalidConfig = { enabled: 'not_boolean' } as any
       const invalidErrors = validateFlagConfig('testFlag', invalidConfig)
@@ -86,7 +86,7 @@ describe('feature flag validation', () => {
     it('should detect undeclared flags', () => {
       const declaredFlags = ['flag1', 'flag2']
       const usedFlags = ['flag1', 'flag3', 'flag4']
-      
+
       const errors = checkUndeclaredFlags(declaredFlags, usedFlags)
       expect(errors).toHaveLength(2)
       expect(errors[0].flag).toBe('flag3')
@@ -96,7 +96,7 @@ describe('feature flag validation', () => {
     it('should handle variant flag names correctly', () => {
       const declaredFlags = ['experimentFlag']
       const usedFlags = ['experimentFlag:control', 'experimentFlag:treatment']
-      
+
       const errors = checkUndeclaredFlags(declaredFlags, usedFlags)
       expect(errors).toEqual([])
     })
@@ -106,7 +106,7 @@ describe('feature flag validation', () => {
         { name: 'control', weight: -10 },
         { name: 'treatment', weight: 110 },
       ]
-      
+
       const errors = validateVariants('testFlag', invalidWeightVariants)
       expect(errors.length).toBeGreaterThan(0)
       expect(errors.some(e => e.error.includes('weight must be between 0 and 100'))).toBe(true)
@@ -117,7 +117,7 @@ describe('feature flag validation', () => {
         { name: 'invalid name', weight: 50 },
         { name: 'valid_name', weight: 50 },
       ]
-      
+
       const errors = validateVariants('testFlag', invalidNameVariants)
       expect(errors.length).toBeGreaterThan(0)
       expect(errors.some(e => e.error.includes('Variant name validation failed'))).toBe(true)
@@ -133,7 +133,7 @@ describe('feature flag validation', () => {
         simpleFlag: true,
         anotherFlag: false,
       }
-      
+
       const errors = validateFlagDefinition(flagDefinition)
       expect(errors).toEqual([])
     })
@@ -149,7 +149,7 @@ describe('feature flag validation', () => {
         },
         stringFlag: 'test' as any,
       }
-      
+
       const errors = validateFlagDefinition(flagDefinition)
       expect(errors).toEqual([])
     })

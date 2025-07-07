@@ -19,7 +19,7 @@ export function useFeatureFlags() {
   return {
     fetch,
     flags,
-    
+
     /**
      * Check if a feature flag is enabled
      * @param flagName - The flag name, optionally with variant (e.g., 'myFlag:variantA')
@@ -28,12 +28,12 @@ export function useFeatureFlags() {
       // Handle variant syntax: 'flagName:variantName'
       const [baseFlagName, targetVariant] = flagName.toString().split(':')
       const flag = flags.value[baseFlagName]
-      
+
       if (!flag?.enabled) return false
-      
+
       // If variant is specified, check if it matches
       if (targetVariant && flag.variant !== targetVariant) return false
-      
+
       return true
     },
 
