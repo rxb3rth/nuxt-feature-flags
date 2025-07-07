@@ -1,5 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
-import type { Nuxt } from '@nuxt/schema'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock Nuxt Kit dependencies
 const mockDefineNuxtModule = vi.fn()
@@ -78,7 +77,9 @@ describe('nuxt feature flags module', () => {
       const mockNuxt = {
         options: {
           runtimeConfig: {
-            public: {},
+            public: {
+              featureFlags: {},
+            } as Record<string, unknown>,
             featureFlags: {},
           },
           rootDir: '/project',
@@ -87,7 +88,7 @@ describe('nuxt feature flags module', () => {
       }
 
       // Mock setup function
-      const setupFunction = (options: any, nuxt: any) => {
+      const setupFunction = (options: Record<string, unknown>, nuxt: typeof mockNuxt) => {
         const resolver = mockCreateResolver()
 
         // Set runtime config
@@ -265,11 +266,11 @@ describe('nuxt feature flags module', () => {
       // Mock type definitions that would be generated
       type FlagConfig = {
         enabled?: boolean
-        value?: any
+        value?: boolean | string | number | null
         variants?: Array<{
           name: string
           weight: number
-          value?: any
+          value?: boolean | string | number | null
         }>
       }
 
@@ -319,12 +320,13 @@ describe('nuxt feature flags module', () => {
         { validation: { mode: 'invalid-mode' } },
       ]
 
-      malformedConfigs.forEach((config) => {
+      malformedConfigs.forEach((config: unknown) => {
         // Should handle gracefully without throwing
         expect(() => {
+          const configObj = config as Record<string, unknown> | null | undefined
           const normalized = {
-            environment: config?.environment || 'production',
-            flags: typeof config?.flags === 'object' ? config.flags : {},
+            environment: configObj?.environment || 'production',
+            flags: typeof configObj?.flags === 'object' ? configObj.flags : {},
           }
           return normalized
         }).not.toThrow()
