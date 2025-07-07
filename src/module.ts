@@ -62,6 +62,7 @@ export default defineNuxtModule<FeatureFlagsConfig>({
 
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
     addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.server'))
+    addPlugin(resolver.resolve('./runtime/app/plugins/feature-flag.client'))
     addImports({
       name: 'useFeatureFlags',
       from: resolver.resolve('./runtime/app/composables/feature-flags'),
@@ -79,11 +80,37 @@ export default defineNuxtModule<FeatureFlagsConfig>({
       getContents: () => {
         const flags = options.flags || {}
         const flagEntries = Object.entries(flags)
-          .map(([key, value]) => `  ${key}: ${typeof value}`)
+          .map(([key, value]) => {
+            // For simple flags, use the actual type
+            if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+              return `  ${key}: ${typeof value}`
+            }
+            
+            // For flag configs with variants, we still resolve to the base type
+            // The variant logic is handled at runtime
+            const flagConfig = value as { enabled?: boolean, value?: unknown }
+            if (flagConfig.enabled !== undefined) {
+              const valueType = flagConfig.value !== undefined ? typeof flagConfig.value : 'boolean'
+              return `  ${key}: ${valueType}`
+            }
+            
+            return `  ${key}: ${typeof value}`
+          })
           .join('\n')
 
         return `export interface FlagsSchema {
 ${flagEntries}
+}
+
+// Type for resolved flag with variant info
+export interface ResolvedFlag {
+  enabled: boolean
+  value?: boolean | number | string | null
+  variant?: string
+}
+
+export interface ResolvedFlags {
+  [key: string]: ResolvedFlag
 }`
       },
     })
