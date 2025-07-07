@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
 
 // Mock the module resolution for testing

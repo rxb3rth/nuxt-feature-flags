@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { generateVariantHash, assignVariant, getVariantForFlag } from '../../src/runtime/server/utils/variant-assignment'
 import type { FlagVariant, VariantContext } from '../../src/runtime/types/feature-flags'
 

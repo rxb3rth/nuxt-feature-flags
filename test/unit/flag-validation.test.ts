@@ -64,7 +64,7 @@ describe('feature flag validation', () => {
             { name: 'control', weight: 50 },
             { name: 'treatment', weight: 50 },
           ],
-        } as any,
+        } as unknown as FlagConfig,
       }
 
       const errors = validateFlagDefinition(flagDefinition)
