@@ -23,6 +23,7 @@ A powerful, type-safe feature flag module for Nuxt 3 that enables both static an
 - 🎲 **Persistent Assignment**: Users consistently get the same variant across sessions
 - 📊 **Validation & Linting**: Built-in validation for flag configuration and usage
 - 🔒 **Type Safety**: Catch errors early with full type inference and validation
+- 🔧 **DevTools Integration**: Visual debugging, monitoring, and interactive flag toggling through Nuxt DevTools
 
 ## 📦 Installation
 
@@ -443,6 +444,99 @@ goodFlag: {
   ]
 }
 ```
+
+## 🔧 DevTools Integration
+
+This module provides seamless integration with Nuxt DevTools, giving you a powerful visual interface to monitor, debug, and control your feature flags during development. Built using the official **@nuxt/devtools-ui-kit** for a consistent, professional experience.
+
+### Accessing DevTools
+
+1. **Enable DevTools**: Make sure `@nuxt/devtools` is installed (it's included as a dev dependency)
+2. **Open DevTools**: Press `Shift + Option + D` (Mac) or `Shift + Alt + D` (Windows/Linux) in your browser
+3. **Find Feature Flags Tab**: Look for the "Feature Flags" tab with a flag icon 🚩
+
+### Features in DevTools
+
+The Feature Flags DevTools panel provides:
+
+- **📊 Dashboard Overview**: See total flags, enabled/disabled counts at a glance
+- **🔍 Flag Inspection**: View all your flags with their current values and status
+- **� Interactive Toggles**: Toggle simple boolean flags directly from the DevTools interface
+- **�📱 Real-time Updates**: Live monitoring of flag states and values with auto-refresh
+- **🎯 Variant Information**: Inspect A/B test variants and their distributions
+- **� Smart Notifications**: Get instant feedback when toggling flags
+- **⚠️ Variant Protection**: Flags with variants cannot be toggled (they require complex logic)
+- **🎨 Professional UI**: Built with the official Nuxt DevTools UI Kit for consistency
+
+### Interactive Controls
+
+```javascript
+// Simple flags can be toggled:
+✅ "newDashboard": true → Click "Toggle" → false
+✅ "experimentalFeature": false → Click "Toggle" → true
+
+// Flags with variants are protected:
+🔒 "buttonColor": { variants: [...] } → Toggle disabled
+🔒 "abTestExample": { variants: [...] } → Toggle disabled
+```
+
+### DevTools Interface
+
+The enhanced interface displays:
+
+```javascript
+{
+  "newDashboard": {
+    "enabled": true,           // ← Can be toggled
+    "value": true,
+    "variant": null
+  },
+  "buttonColor": {
+    "enabled": true,
+    "value": "blue",
+    "variant": "treatment",    // ← Shows active variant
+    "variants": ["control", "treatment", "variant-c"]  // ← All available variants
+  },
+  "experimentalFeature": {
+    "enabled": false,          // ← Can be toggled
+    "value": false,
+    "variant": null
+  }
+}
+```
+
+### Development Workflow
+
+1. **Monitor Flags**: Watch flags update in real-time as you navigate your app
+2. **Test Scenarios**: Toggle flags to test different user experiences
+3. **Debug Variants**: See which variant users are assigned and why
+4. **Validate Logic**: Ensure context-based flags work with different conditions
+5. **Performance Check**: Monitor flag resolution times and optimization opportunities
+
+### Real-time Updates
+
+The DevTools interface automatically:
+- **Refreshes every 5 seconds** when connected to show live changes
+- **Shows notifications** when flags are toggled
+- **Updates immediately** after toggle actions
+- **Handles connection states** gracefully with fallback to direct API calls
+
+### Toggle Limitations
+
+For safety and consistency, the following flags cannot be toggled:
+- **Flags with variants**: These require complex assignment logic
+- **Context-dependent flags**: These depend on user/request context
+- **Environment flags**: These are tied to `process.env` values
+
+### Development Benefits
+
+- **Quick Debugging**: Instantly see which flags are active and why
+- **Rapid Prototyping**: Toggle features on/off without code changes
+- **Variant Testing**: Verify A/B test configurations work correctly
+- **Context Validation**: Ensure server-side context evaluation works as expected
+- **Team Collaboration**: Share flag states and debug issues together
+
+> **Note**: DevTools integration is only available in development mode and automatically disabled in production builds. Flag toggles only affect the current session and don't persist across server restarts.
 
 ## 🤝 Contributing
 

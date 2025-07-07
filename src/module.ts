@@ -4,6 +4,7 @@ import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplat
 import { loadConfig } from 'c12'
 import type { FeatureFlagsConfig, FlagDefinition } from './types'
 import { logger } from './utils/logger'
+import { setupDevToolsIntegration } from './devtools'
 
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {
@@ -122,5 +123,8 @@ export interface ResolvedFlags {
 }`
       },
     })
+
+    // Setup DevTools integration
+    setupDevToolsIntegration(options, nuxt)
   },
 })
