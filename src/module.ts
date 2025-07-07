@@ -23,8 +23,6 @@ export default defineNuxtModule<FeatureFlagsConfig>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    nuxt.options.runtimeConfig.public.featureFlags = defu(nuxt.options.runtimeConfig.public.featureFlags, options)
-
     nuxt.options.alias['#feature-flags/types'] = './types/nuxt-feature-flags.d.ts'
     nuxt.options.alias['#feature-flags/handler'] = resolver.resolve('./runtime/server/handlers/feature-flags')
 
@@ -50,13 +48,23 @@ export default defineNuxtModule<FeatureFlagsConfig>({
           throw new Error(`${configFile} does not exist`)
         }
 
-        options.flags = defu(options.flags, configFlags || {})
+        // Handle both direct flag definitions and function-based definitions
+        let resolvedFlags = configFlags
+        if (typeof configFlags === 'function') {
+          // Call the function to get the actual flags (for defineFeatureFlags usage)
+          resolvedFlags = (configFlags as () => FlagDefinition)()
+        }
+
+        options.flags = defu(options.flags, resolvedFlags || {})
         configPath = configFile!
       }
       catch (error) {
         logger.error('Failed to load feature flags configuration:', error)
       }
     }
+
+    // Set runtime config after loading flags
+    nuxt.options.runtimeConfig.public.featureFlags = defu(nuxt.options.runtimeConfig.public.featureFlags, options)
 
     nuxt.options.alias['#feature-flags/config'] = configPath
 
