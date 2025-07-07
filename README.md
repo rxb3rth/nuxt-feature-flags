@@ -8,7 +8,7 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-A powerful, type-safe feature flag module for Nuxt 3 that enables both static and dynamic feature flag evaluation with server-side support. Perfect for A/B testing, gradual rollouts, and feature management.
+A powerful, type-safe feature flag module for Nuxt 3 that enables both static and dynamic feature flag evaluation with server-side support. Perfect for A/B testing, gradual rollouts, and feature management with built-in variant support.
 
 > [!WARNING]
 > This project is just getting started, so things are gonna change a lot. Updates will roll out often, and we're totally open to feedback—hit us up with your thoughts!
@@ -19,6 +19,9 @@ A powerful, type-safe feature flag module for Nuxt 3 that enables both static an
 - 🛠 **TypeScript Ready**: Full TypeScript support with type-safe flag definitions and autocomplete
 - 🧩 **Nuxt 3 Integration**: Seamless integration with auto-imports and runtime config
 - 🎯 **Static & Dynamic Flags**: Support for both simple boolean flags and dynamic evaluation
+- 🔀 **A/B/n Testing**: Built-in support for feature variants with configurable distribution
+- 🎲 **Persistent Assignment**: Users consistently get the same variant across sessions
+- 📊 **Validation & Linting**: Built-in validation for flag configuration and usage
 - 🔒 **Type Safety**: Catch errors early with full type inference and validation
 
 ## 📦 Installation
@@ -63,6 +66,25 @@ export default defineFeatureFlags((context) => {
     newDashboard: true,
     experimentalFeature: process.env.NODE_ENV === 'development',
     betaFeature: context?.user?.isBetaTester ?? false,
+    
+    // A/B test with variants
+    buttonDesign: {
+      enabled: true,
+      value: 'default',
+      variants: [
+        { name: 'control', weight: 50, value: 'original' },
+        { name: 'treatment', weight: 50, value: 'new-design' }
+      ]
+    },
+    
+    // Gradual rollout (30% get new feature)
+    newCheckout: {
+      enabled: true,
+      variants: [
+        { name: 'old', weight: 70, value: false },
+        { name: 'new', weight: 30, value: true }
+      ]
+    }
   }
 })
 
@@ -78,12 +100,26 @@ export default defineNuxtConfig({
 
 ```vue
 <script setup>
-const { isEnabled } = useFeatureFlags()
+const { isEnabled, getVariant, getValue } = useFeatureFlags()
 </script>
 
 <template>
   <div>
+    <!-- Simple feature flag -->
     <NewDashboard v-if="isEnabled('newDashboard')" />
+    
+    <!-- A/B test with variants -->
+    <div v-feature="'buttonDesign:control'">
+      <button class="original-style">Click me</button>
+    </div>
+    <div v-feature="'buttonDesign:treatment'">
+      <button class="new-style">Click me</button>
+    </div>
+    
+    <!-- Check specific variant programmatically -->
+    <div v-if="getVariant('buttonDesign') === 'treatment'">
+      You're seeing the new design! Value: {{ getValue('buttonDesign') }}
+    </div>
   </div>
 </template>
 ```
@@ -93,7 +129,7 @@ const { isEnabled } = useFeatureFlags()
 ```ts
 // server/api/dashboard.ts
 export default defineEventHandler(async (event) => {
-  const { isEnabled } = getFeatureFlags(event)
+  const { isEnabled, getVariant, getValue } = getFeatureFlags(event)
 
   if (!isEnabled('newDashboard')) {
     throw createError({
@@ -102,11 +138,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Check if user is in new checkout variant
+  const checkoutVersion = getVariant('newCheckout')
+  
   return {
     stats: {
       users: 100,
       revenue: 50000
-    }
+    },
+    checkoutVersion,
+    useNewFeatures: getValue('newCheckout')
   }
 })
 ```
@@ -118,13 +159,27 @@ export default defineEventHandler(async (event) => {
 ```ts
 const { 
   flags,       // Reactive flags object
-  isEnabled,   // (flagName: string) => boolean
+  isEnabled,   // (flagName: string, variant?: string) => boolean
+  getVariant,  // (flagName: string) => string | undefined
+  getValue,    // (flagName: string) => any
+  getFlag,     // (flagName: string) => ResolvedFlag
 } = useFeatureFlags()
 
 // Check if a flag is enabled
 if (isEnabled('newFeature')) {
   // Feature is enabled
 }
+
+// Check specific variant
+if (isEnabled('myFlag:variantA')) {
+  // User is in variant A
+}
+
+// Get assigned variant
+const variant = getVariant('myFlag') // 'control' | 'treatment' | undefined
+
+// Get flag value
+const value = getValue('myFlag') // The resolved value for the user's variant
 ```
 
 ### Server-Side Usage
@@ -132,13 +187,135 @@ if (isEnabled('newFeature')) {
 ```ts
 const { 
   flags,       // Flags object
-  isEnabled,   // (flagName: string) => boolean
+  isEnabled,   // (flagName: string, variant?: string) => boolean
+  getVariant,  // (flagName: string) => string | undefined  
+  getValue,    // (flagName: string) => any
 } = getFeatureFlags(event)
 
-// Check if a flag is enabled
+// Same API as client-side
 if (isEnabled('newFeature')) {
   // Feature is enabled
 }
+```
+
+### Template Usage with Directives
+
+```vue
+<template>
+  <!-- Show for all enabled users -->
+  <div v-feature="'myFlag'">
+    This shows if myFlag is enabled
+  </div>
+  
+  <!-- Show for specific variant -->
+  <div v-feature="'myFlag:control'">
+    Control version
+  </div>
+  
+  <div v-feature="'myFlag:treatment'">
+    Treatment version  
+  </div>
+</template>
+```
+
+## 🎲 Feature Variants & A/B Testing
+
+Feature variants allow you to create A/B/n tests and gradual rollouts with consistent user assignment.
+
+### Basic Variant Configuration
+
+```ts
+// feature-flags.config.ts
+import { defineFeatureFlags } from '#feature-flags/handler'
+
+export default defineFeatureFlags(() => {
+  return {
+    // Simple A/B test
+    buttonColor: {
+      enabled: true,
+      value: 'blue', // default value
+      variants: [
+        { name: 'blue', weight: 50 },
+        { name: 'red', weight: 50, value: 'red' }
+      ]
+    },
+    
+    // A/B/C/D test
+    homepage: {
+      enabled: true,
+      variants: [
+        { name: 'original', weight: 40, value: 'v1' },
+        { name: 'redesign', weight: 30, value: 'v2' },
+        { name: 'minimal', weight: 20, value: 'v3' },
+        { name: 'experimental', weight: 10, value: 'v4' }
+      ]
+    },
+    
+    // Gradual rollout (20% get new feature)
+    newFeature: {
+      enabled: true,
+      variants: [
+        { name: 'disabled', weight: 80, value: false },
+        { name: 'enabled', weight: 20, value: true }
+      ]
+    }
+  }
+})
+```
+
+### Variant Assignment Logic
+
+- **Persistent**: Users get the same variant across sessions (based on user ID, session ID, or IP)
+- **Weighted Distribution**: Variants are assigned based on configured weights (0-100)
+- **Automatic Normalization**: Weights are automatically normalized if they don't sum to 100
+
+### Using Variants in Templates
+
+```vue
+<template>
+  <!-- Different button colors based on variant -->
+  <button 
+    v-feature="'buttonColor:blue'"
+    class="bg-blue-500 text-white px-4 py-2"
+  >
+    Blue Button (50% of users)
+  </button>
+  
+  <button 
+    v-feature="'buttonColor:red'" 
+    class="bg-red-500 text-white px-4 py-2"
+  >
+    Red Button (50% of users)
+  </button>
+  
+  <!-- Conditional content based on variant -->
+  <div v-if="getVariant('homepage') === 'redesign'">
+    <h1>Welcome to our new design!</h1>
+  </div>
+</template>
+```
+
+### Programmatic Variant Checking
+
+```ts
+const { isEnabled, getVariant, getValue } = useFeatureFlags()
+
+// Check if user is in specific variant
+if (isEnabled('buttonColor:red')) {
+  // User sees red button
+}
+
+// Get the assigned variant name
+const variant = getVariant('buttonColor') // 'blue' | 'red'
+
+// Get the variant value
+const color = getValue('buttonColor') // 'blue' | 'red'
+
+// Use in computed properties
+const buttonClass = computed(() => {
+  const color = getValue('buttonColor')
+  return `bg-${color}-500 text-white px-4 py-2`
+})
 ```
 
 ## ⚙️ Configuration Methods
@@ -200,6 +377,71 @@ export default defineFeatureFlags((context) => {
     mobileFeature: context?.device?.isMobile ?? false,
   }
 })
+```
+
+## ✅ Validation & Build Checks
+
+The module includes built-in validation to catch configuration errors and undeclared flag usage.
+
+### Configuration Validation
+
+The module automatically validates:
+- Flag naming conventions (alphanumeric, hyphens, underscores)
+- Variant weight distribution (0-100, total ≤ 100)
+- Duplicate variant names
+- Required configuration properties
+
+### Build-time Flag Usage Validation
+
+```ts
+// build/validate-flags.ts
+import { validateFeatureFlags } from 'nuxt-feature-flags/build'
+
+// Validate during build
+await validateFeatureFlags({
+  configPath: './feature-flags.config.ts',
+  srcPatterns: ['**/*.vue', '**/*.ts'],
+  failOnErrors: true
+})
+```
+
+This checks for:
+- Undeclared flags used in code (via `isEnabled('flag')` or `v-feature="'flag'"`)
+- Invalid flag configurations
+- Unreferenced flags (declared but never used)
+
+### Common Validation Errors
+
+```ts
+// ❌ Invalid variant weights (total > 100)
+badFlag: {
+  enabled: true,
+  variants: [
+    { name: 'a', weight: 60 },
+    { name: 'b', weight: 50 } // Total: 110%
+  ]
+}
+
+// ❌ Invalid flag name
+'invalid-flag!': true // Contains invalid character
+
+// ❌ Duplicate variant names
+duplicateVariants: {
+  enabled: true,
+  variants: [
+    { name: 'test', weight: 50 },
+    { name: 'test', weight: 50 } // Duplicate name
+  ]
+}
+
+// ✅ Valid configuration
+goodFlag: {
+  enabled: true,
+  variants: [
+    { name: 'control', weight: 60 },
+    { name: 'treatment', weight: 40 } // Total: 100%
+  ]
+}
 ```
 
 ## 🤝 Contributing
