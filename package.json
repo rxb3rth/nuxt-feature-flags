@@ -1,11 +1,15 @@
 {
   "name": "nuxt-feature-flags",
   "version": "1.1.1",
-  "description": "Feature flags for Nuxt",
+  "description": "Feature flags for Nuxt with A/B testing and variant support",
   "keywords": [
     "nuxt",
     "feature",
-    "flags"
+    "flags",
+    "ab-testing",
+    "variants",
+    "rollouts",
+    "experiments"
   ],
   "repository": {
     "type": "git",
@@ -18,6 +22,11 @@
       "types": "./dist/types.d.ts",
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
+    },
+    "./build": {
+      "types": "./dist/build.d.ts",
+      "import": "./dist/build.mjs",
+      "require": "./dist/build.cjs"
     }
   },
   "main": "./dist/module.cjs",
@@ -31,8 +40,11 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run prepare && npm run prepack && npm publish && git push --follow-tags",
-    "lint": "eslint ."
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release --patch --bump && npm publish && git push --follow-tags",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@nuxt/kit": "^3.15.4",
@@ -44,11 +56,15 @@
     "@nuxt/module-builder": "^0.8.4",
     "@nuxt/schema": "^3.15.4",
     "@types/node": "latest",
+    "@vitest/coverage-v8": "^2.1.8",
     "changelogen": "^0.5.7",
     "eslint": "^9.20.1",
+    "glob": "^11.0.3",
+    "h3": "^1.12.0",
     "nuxt": "^3.15.4",
     "pathe": "^2.0.3",
     "typescript": "~5.6.3",
+    "vitest": "^2.1.9",
     "vue-tsc": "^2.2.2"
   }
 }
