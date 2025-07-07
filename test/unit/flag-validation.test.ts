@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import type { FlagConfig } from '../../src/runtime/types/feature-flags'
 
 // Import validation functions
 const {
@@ -76,7 +77,7 @@ describe('feature flag validation', () => {
       expect(validErrors).toEqual([])
 
       // Test flag config with invalid structure
-      const invalidConfig = { enabled: 'not_boolean' } as any
+      const invalidConfig = { enabled: 'not_boolean' } as unknown as FlagConfig
       const invalidErrors = validateFlagConfig('testFlag', invalidConfig)
       expect(invalidErrors.length).toBeGreaterThan(0)
     })
@@ -147,7 +148,7 @@ describe('feature flag validation', () => {
             { name: 'a', weight: 100 },
           ],
         },
-        stringFlag: 'test' as any,
+        stringFlag: 'test' as unknown as FlagConfig,
       }
 
       const errors = validateFlagDefinition(flagDefinition)

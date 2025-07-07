@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { Nuxt } from '@nuxt/schema'
 
 // Mock Nuxt Kit dependencies
 const mockDefineNuxtModule = vi.fn()
