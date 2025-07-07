@@ -2,8 +2,8 @@ import { existsSync } from 'node:fs'
 import { defu } from 'defu'
 import { defineNuxtModule, createResolver, addImports, addPlugin, addTypeTemplate, addServerHandler, addServerImportsDir } from '@nuxt/kit'
 import { loadConfig } from 'c12'
-import type { FeatureFlagsConfig, FlagDefinition } from './runtime/types'
-import { logger } from './runtime/logger'
+import type { FeatureFlagsConfig, FlagDefinition } from './types'
+import { logger } from './utils/logger'
 
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {

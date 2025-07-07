@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { glob } from 'glob'
-import { logger } from './runtime/logger'
+import { logger } from './utils/logger'
 import type { ValidationError } from './runtime/server/utils/validation'
 import { validateFlagDefinition, checkUndeclaredFlags } from './runtime/server/utils/validation'
 
